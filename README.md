@@ -1,13 +1,24 @@
-# Career Management Platform (Australia)
+# career-management
 
-An AI-powered, candidate-first career management platform for the Australian market — built to be the single source of truth for a person's professional identity, and to break the demoralising, feedback-free loop of applying for jobs.
+A career management app for Australian contractors, built candidate-first. It helps you
+find contract jobs, work out which are worth applying for, write tailored applications
+without starting from scratch every time, and keep track of the whole process in one place.
 
-We are deliberately **in the problem space** right now. No technology, architecture, or implementation decisions have been made yet.
+Built from real experience as a Queensland IT contractor, starting with contractors around
+Brisbane.
+
+We are deliberately still in the **problem and product definition** stage. No technology or
+design has been chosen yet. Everything is thinking made concrete, so we can pressure-test it
+before building.
 
 ## Start here
 
-- **[docs/01-problem-and-product-definition.md](docs/01-problem-and-product-definition.md)** — the shared brain: the real problem, the wedge (Australian / QLD government ICT contractors), the flywheel, the "spine" data model of a career, and the open questions.
+- **[_docs/01-problem-and-product-definition.md](_docs/01-problem-and-product-definition.md)**
+  is the shared brain. It covers the real problem, who it's for, how the app works, the
+  decisions we've made so far, and the big bets we're carrying. Written in plain English.
 
 ## Where we are
 
-Understanding the end-to-end Australian career journey deeply — every pain point and assumption — *before* designing the product. Features and tech come later, and only if they trace back to a problem captured in the doc above.
+We understand the problem deeply and have decided what to build first: one thin slice that
+finds jobs and tells you whether they're worth applying for. Features and technology come
+next, and only if they trace back to a problem written down in the doc above.
