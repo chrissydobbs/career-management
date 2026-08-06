@@ -16,6 +16,8 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D2 | **Getting jobs into the system at launch** | **A mix:** manual paste-link / forward-email as the reliable floor, plus browser-extension capture and best-effort aggregation layered on where they work. Product must stay valuable on the manual floor alone. | 2026-08-06 |
 | D3 | **MVP heart — what we design & build first** | **The tracker / spine** — the append-only memory of every role, action, agent and outcome. Useful even with manual entry; makes every other box stop starting from scratch. | 2026-08-06 |
 | D4 | **Monetisation** | **Undecided — deliberately open.** Revisit once the wedge and value are proven; design so it doesn't foreclose candidate-subscription *or* hiring-side options. | 2026-08-06 |
+| D5 | **Day-one 'red' rules** | The four hard filters, all active: (1) rate below floor, (2) eligibility not met, (3) wrong location / unacceptable onsite, (4) already seen (duplicate). See §7a. | 2026-08-06 |
+| D6 | **Capture model** | **Extraction-first.** User pastes a link / forwards an email; system extracts title, client, rate, ref, closing date; user only corrects. → *Parsing quality is a first-order requirement, not a nicety.* | 2026-08-06 |
 
 ---
 
@@ -178,6 +180,49 @@ Nothing here is stored; it is all computed from A × B × history.
 
 **Effort-vs-reward** — given predicted winnability and whether I can reuse atoms or must write fresh, is it worth my energy? This is where the product is brave enough to say *"apply to none of these today."*
 
+## 7a. The minimum role record & the day-one traffic light (resolves Q6)
+
+Because we build the spine first (D3) with extraction-first capture (D6) and a traffic-light surface (D1), the question is: **what is the smallest role record that is cheap to capture yet already powers a useful red/amber/green on day one?**
+
+### The red rules are personal, set at onboarding
+
+The four hard filters (D5) are **not hardcoded** — they are the user's own criteria, **selected during onboarding and editable anytime.** Each user's traffic light is calibrated to *their* floor, *their* eligibility, *their* locations. This is what lets one consistent surface adapt to every individual (the long-term platform promise, delivered cheaply from the start).
+
+Onboarding therefore captures, once, the Half-A facts that drive the day-one light:
+
+- **Rate floor** (with PAYG+super vs ABN+GST understood).
+- **Eligibility held** — clearance level, working rights/citizenship, key registrations.
+- **Location / onsite tolerance.**
+- **Deal-breakers** — the red rules the user switches on.
+
+### Trust tiers — not all reasons are trusted equally
+
+A crucial nuance from the founder: a reason being a *deal-breaker* is **not** the same as *trusting the system's call on it*. The founder marked all four as deal-breakers, but would only skip *without second-guessing* on the **objective, checkable** ones.
+
+- **Tier 1 — auto-trust (may firmly red or even silently filter):** *rate below floor*, *duplicate / already-seen*. Objective, verifiable, no judgement required.
+- **Tier 2 — show but let the user verify / override (never silent-filter):** *eligibility mismatch* (users trust their own read on eligibility), *agency track record* (inferred, cold-start, small sample — low trust until proven).
+
+**Design implication:** Tier 1 reasons can drive confident reds and are the safest thing to build first. Tier 2 reasons appear as context/amber with a "here's why, you decide" framing — earning trust over time rather than assuming it. This maps directly onto the cold-start truth in §8.
+
+### Minimum role record for a day-one light
+
+Enough to evaluate the Tier-1 rules and reconstruct context later:
+
+- **Reference number** (or fallback key: title + client + rate + JD similarity) — powers *duplicate* detection.
+- **Rate** (and PAYG/ABN basis) — powers *rate below floor*.
+- **Title, client, source, closing date** — context + the "which role was this again?" fix.
+- **JD text** (captured, not hand-typed) — feeds later fit/tailoring; not required for the day-one light.
+
+Everything beyond this is enrichment. The light works from ref + rate + the user's onboarding criteria — all of which extraction-first capture can populate with almost no typing.
+
+### Founder profile (test user #0) — and a wedge refinement
+
+Seeded facts from the founder, who is the first real user:
+
+- **Clearance: none.** → Any role requiring Baseline/NV1/NV2 is an instant eligibility red for this user. **This sharpens the wedge:** the founder's realistic pool is **Queensland *state* government + private-sector SEQ contracts** (e.g. RoadTek/TMR-style transport roles that don't require federal clearance), **not** federal/defence/Canberra-cleared work. Worth remembering when we reason about the beachhead — "government contractor" is really "state-government + private contractor" for this user.
+- **Capture tolerance: almost nothing typed** — reinforces D6.
+- **Rate floor: TBD** — to capture at onboarding.
+
 ## 8. The cold-start sequencing truth
 
 The product does **not** launch omniscient:
@@ -195,7 +240,8 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 3. ~~**Unified search feasibility**~~ — **Direction set (D2):** manual paste/forward is the reliable floor; extension + best-effort aggregation layered on. Still open: how good the paste/forward parsing has to be to feel effortless.
 4. **Reflection capture UX** — how to make the crown-jewel subjective data effortless to record in the emotional moment right after an interview.
 5. **Motivation & dignity as design requirements** — the product does psychological work, not just functional. How does "this took 4 minutes and is building into something" replace "this took 3 hours and vanished"?
-6. **The spine's decision surface** *(new, follows from D3)* — since we build the tracker first, what is the minimum set of fields per role that (a) is cheap enough to capture manually and (b) already powers a useful traffic-light on day one?
+6. ~~**The spine's decision surface**~~ — **Resolved (§7a):** minimum record = ref + rate + title/client/source/closing (+ JD text captured); red rules are personal and set at onboarding; reasons have trust tiers. Still open underneath: how good extraction has to be to feel effortless (ties to Q3-underneath).
+7. **Rate floor & onboarding set** *(new)* — the founder's rate floor is still TBD; more broadly, what exactly does the onboarding flow capture, once, to calibrate the day-one traffic light without feeling like a chore?
 
 ## 10. Explicitly out of scope (for now)
 
