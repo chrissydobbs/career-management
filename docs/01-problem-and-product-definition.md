@@ -2,7 +2,20 @@
 
 > **Status:** Living document. This is *thinking made concrete*, not a spec.
 > No technology, architecture, or implementation decisions are captured here yet — by design.
-> **Last updated:** 2026-08-05
+> **Last updated:** 2026-08-06
+
+---
+
+## Decisions log
+
+Founder decisions made explicitly. These are settled unless revisited here.
+
+| # | Decision | Choice | Date |
+|---|----------|--------|------|
+| D1 | **Decision surface** — how "worth applying or not" is shown | **Traffic light + one plain-English reason** (e.g. "NV1 required — you don't hold it"). Fast, trustable, low cognitive load. | 2026-08-06 |
+| D2 | **Getting jobs into the system at launch** | **A mix:** manual paste-link / forward-email as the reliable floor, plus browser-extension capture and best-effort aggregation layered on where they work. Product must stay valuable on the manual floor alone. | 2026-08-06 |
+| D3 | **MVP heart — what we design & build first** | **The tracker / spine** — the append-only memory of every role, action, agent and outcome. Useful even with manual entry; makes every other box stop starting from scratch. | 2026-08-06 |
+| D4 | **Monetisation** | **Undecided — deliberately open.** Revisit once the wedge and value are proven; design so it doesn't foreclose candidate-subscription *or* hiring-side options. | 2026-08-06 |
 
 ---
 
@@ -177,11 +190,12 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 
 ## 9. Open questions (actively unresolved)
 
-1. **The decision surface** — at the moment of "worth applying or not," what does the user actually see? A score? Red/amber/green? A one-line reason? This is where the whole spine surfaces as something you'd look at. *(Next thread to pull.)*
-2. **Who pays, and when** — candidate subscription (aligned, but intermittent willingness-to-pay) vs eventually monetising the hiring side (bigger money, but tension with "we work only for you"). The wedge and the promise must be chosen knowing which door stays open.
-3. **Unified search feasibility** — the most-wanted feature (aggregate SEEK/LinkedIn/SmartJobs) is the incumbents' most-defended asset (LinkedIn has litigated over data extraction). The product must stay valuable even when search is semi-manual (paste a link / forward an email) so the company isn't bet on the one thing incumbents fight hardest.
+1. ~~**The decision surface**~~ — **Resolved (D1):** traffic light + one plain-English reason. Still open *underneath*: exactly which reasons we can generate on day one vs later.
+2. **Who pays, and when** — **Held open (D4).** Candidate subscription (aligned, intermittent willingness-to-pay) vs hiring-side money later (bigger, but tension with "we work only for you"). Design so neither door is foreclosed.
+3. ~~**Unified search feasibility**~~ — **Direction set (D2):** manual paste/forward is the reliable floor; extension + best-effort aggregation layered on. Still open: how good the paste/forward parsing has to be to feel effortless.
 4. **Reflection capture UX** — how to make the crown-jewel subjective data effortless to record in the emotional moment right after an interview.
 5. **Motivation & dignity as design requirements** — the product does psychological work, not just functional. How does "this took 4 minutes and is building into something" replace "this took 3 hours and vanished"?
+6. **The spine's decision surface** *(new, follows from D3)* — since we build the tracker first, what is the minimum set of fields per role that (a) is cheap enough to capture manually and (b) already powers a useful traffic-light on day one?
 
 ## 10. Explicitly out of scope (for now)
 
