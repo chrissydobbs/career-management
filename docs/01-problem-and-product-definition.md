@@ -16,7 +16,7 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D2 | **Getting jobs into the system at launch** | **A mix:** manual paste-link / forward-email as the reliable floor, plus browser-extension capture and best-effort aggregation layered on where they work. Product must stay valuable on the manual floor alone. | 2026-08-06 |
 | D3 | **MVP heart — what we design & build first** | **The tracker / spine** — the append-only memory of every role, action, agent and outcome. Useful even with manual entry; makes every other box stop starting from scratch. | 2026-08-06 |
 | D4 | **Monetisation** | **Undecided — deliberately open.** Revisit once the wedge and value are proven; design so it doesn't foreclose candidate-subscription *or* hiring-side options. | 2026-08-06 |
-| D5 | **Day-one 'red' rules** | The four hard filters, all active: (1) rate below floor, (2) eligibility not met, (3) wrong location / unacceptable onsite, (4) already seen (duplicate). See §7a. | 2026-08-06 |
+| D5 | **Day-one 'red' rules** | The four hard filters, all active: (1) rate below floor, (2) eligibility you **cannot** meet, (3) wrong location / unacceptable onsite, (4) already seen (duplicate). **Eligibility is three-state** — hold / can-obtain / can't-meet — and only *can't-meet* is red; "ability to obtain" stays in play. See §7a. | 2026-08-06 |
 | D6 | **Capture model** | **Extraction-first.** User pastes a link / forwards an email; system extracts title, client, rate, ref, closing date; user only corrects. → *Parsing quality is a first-order requirement, not a nicety.* | 2026-08-06 |
 
 ---
@@ -133,7 +133,7 @@ The spine has two halves that stay separate, plus a derived layer.
 
 The single source of truth. Roles churn; this accumulates.
 
-- **Eligibility facts** — location/SEQ, working rights/visa/citizenship, security clearance (Baseline/NV1/NV2), professional registrations, notice period/availability, PAYG vs ABN setup. These are **hard filters** — a role needing NV1 you don't hold is unwinnable instantly. Cheap, binary, first gate.
+- **Eligibility facts** — location/SEQ, working rights/visa/citizenship, security clearance (Baseline/NV1/NV2), **plus obtainability** (am I a citizen / willing to be vetted, so I *could* get cleared?), professional registrations, notice period/availability, PAYG vs ABN setup. These are the first gate — but **not purely binary** (see the three-state rule below). A role requiring a clearance you can *obtain* is not a reject.
 - **Engagement preferences** — perm vs contract, rate floor, locations/remote, industries, role types, deal-breakers. Defines "does this even fit my criteria."
 - **Evidence atoms** — *the single most important modelling decision.* Not a master-resume blob, but granular, reusable, tagged achievements ("led in-vehicle telematics rollout across X vehicles, delivered Y"), tagged by skill/capability/domain/seniority. A suitability statement becomes *select the right atoms + frame them against the JD.* **Crucially, the user does not enter atoms by hand — nobody thinks that way.** The system *extracts and remembers* them from uploaded CVs, tailored JDs, and accepted/rejected iterations. This is what makes cycle 400 cheap.
 - **Skills & capabilities (normalised)** — so roles can be matched to you, ideally aligned to how government describes capabilities.
@@ -195,6 +195,16 @@ Onboarding therefore captures, once, the Half-A facts that drive the day-one lig
 - **Location / onsite tolerance.**
 - **Deal-breakers** — the red rules the user switches on.
 
+### Eligibility is three states, not two (correction)
+
+A clearance/registration requirement is **not** "hold it or you're out." The JD language matters, and there are three states:
+
+1. **Hold it** — the role wants a *current* clearance you already have → fine.
+2. **Can obtain it** — the role says "ability to obtain" / "eligible for" a clearance, and you're a citizen willing to be vetted (many roles sponsor this) → **not a red; this is green/amber, keep it in play.**
+3. **Can't meet it** — the role needs a clearance held *day one* that you don't have, or requires citizenship/working rights you can't satisfy → **red.**
+
+**Only state 3 is an instant reject.** Conflating states 2 and 3 wrongly bins winnable federal/sponsored roles. So the extraction has to read *how* the requirement is phrased ("current NV1" vs "ability to obtain NV1"), and onboarding has to capture not just what the user *holds* but what they're *eligible and willing to obtain.*
+
 ### Trust tiers — not all reasons are trusted equally
 
 A crucial nuance from the founder: a reason being a *deal-breaker* is **not** the same as *trusting the system's call on it*. The founder marked all four as deal-breakers, but would only skip *without second-guessing* on the **objective, checkable** ones.
@@ -219,7 +229,7 @@ Everything beyond this is enrichment. The light works from ref + rate + the user
 
 Seeded facts from the founder, who is the first real user:
 
-- **Clearance: none.** → Any role requiring Baseline/NV1/NV2 is an instant eligibility red for this user. **This sharpens the wedge:** the founder's realistic pool is **Queensland *state* government + private-sector SEQ contracts** (e.g. RoadTek/TMR-style transport roles that don't require federal clearance), **not** federal/defence/Canberra-cleared work. Worth remembering when we reason about the beachhead — "government contractor" is really "state-government + private contractor" for this user.
+- **Clearance: none currently held — but obtainability TBD (citizenship / willingness to be vetted).** → Roles requiring a clearance *held day one* are red; roles saying *"ability to obtain"* stay in play if the founder is eligible and willing. **Correction to the earlier over-narrowing:** the pool is **not** just state-gov + private — it includes federal/sponsored roles where clearance is obtainable. The true auto-red is only state 3 above. (Where the founder isn't eligible/willing to obtain, the state-gov + private SEQ pool is the fallback.)
 - **Capture tolerance: almost nothing typed** — reinforces D6.
 - **Rate floor: TBD** — to capture at onboarding.
 
