@@ -26,6 +26,8 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D12 | **Rate signal = observed advertised rates** | The keep-warm rate drip and any benchmarking come from **rates stated in ingested job ads** ("roles like yours advertise ~$X–$Y") — observed, not invented. When ads are blank/messy, say **"not enough recent data"** rather than force a number. | 2026-08-06 |
 | D13 | **Tailoring is an in-app loop** | Tailoring happens **inside the product**, not external ChatGPT — otherwise the accept/reject signal that powers learned voice is lost. Human-in-the-loop, two-way; the AI never sends a statement unseen. See §7c. | 2026-08-06 |
 | D14 | **Moat = atoms + voice; bootstrap with atoms** | The moat is **tagged evidence atoms** (built passively) + **learned voice** (captured implicitly from edits, never by rating drafts); outcome-weighting is a slow-burn bonus. Cold start is bridged by atoms, and in-app tailoring must be *obviously* faster than ChatGPT from the first use. See §7c. | 2026-08-06 |
+| D15 | **Pack assembly = three triggers** | A pack can be assembled by **forwarding the agent's email** (primary; matches to the role record, parses the request), **pre-building at apply time**, or a **manual "make a pack"** action. Uncertain matches are confirmed with the user, never guessed. See §7d. | 2026-08-06 |
+| D16 | **Forms are track-only (day one)** | The app does **not** fill or sign the Consent Form / ATR (external, Dochub) — the user handles those. It **does** track the **ATR fact** (which agency represents the user for which ref) to power double-submission protection. Owning the form flow is deferred. See §7d. | 2026-08-06 |
 
 ---
 
@@ -322,6 +324,22 @@ The chicken-and-egg: it needs in-app use to learn your voice, but needs a learne
 - Day one the app can't sound like you yet — but it starts from your **pre-loaded atoms + the JD already in-system**, so you skip re-pasting and example-hunting. That alone makes it faster than a cold prompt *on the first use*.
 - That day-one speed earns the switch; voice then quietly compounds over the following weeks.
 - **The bar:** in-app tailoring must be *obviously* faster than ChatGPT from the very first use, or the habit wins and the voice signal is never captured. This is a hard product requirement, not an aspiration.
+
+## 7d. The pack-assembly moment (the two-stage funnel)
+
+This is the **highest-value intervention** — the moment the agent bites and asks for the pack (the RoadTek email), where the founder currently burns hours and lost the will to continue.
+
+### Three ways to assemble a pack (D15)
+
+- **Forward-email trigger (primary):** forward the agent's request; the app **matches it to the existing role record** (ref number, else fuzzy key: client + title + rate), **parses what's asked** (CV / suitability / forms) into a checklist, and **assembles** — the in-app tailoring loop (§7c) drafts the suitability from atoms + the JD it already holds; the CV renders in the requested format.
+- **Pre-build at apply time:** optionally prepare a ready-to-go pack the moment you apply, so it's already waiting if the agent bites.
+- **Manual "make a pack":** trigger assembly yourself from the tracker anytime.
+
+**Matching, never guessing:** ref number matches confidently; when the fuzzy key is uncertain, **ask the user to confirm the match** rather than silently attach to the wrong role (consistent with principle #9).
+
+### Forms are track-only on day one (D16)
+
+The Consent Form + Authority to Represent live in external tools (Dochub). Day one we **do not fill or sign them** — the user handles that. But we **still track the ATR fact**: *which agency holds Authority to Represent for which reference number.* That log is what powers **double-submission protection** (the "already represented for this ref" red). Tracking the fact ≠ owning the form; owning the form flow is deferred.
 
 ## 8. The cold-start sequencing truth
 
