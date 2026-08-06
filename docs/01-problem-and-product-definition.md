@@ -36,6 +36,7 @@ The decisions we have made and agreed. Settled unless we revisit them here.
 | D15 | Three ways to build an application pack | You can **forward the agency's email** (the app matches it to the job and works out what's needed), have a pack **prepared in advance** when you apply, or build one **on demand**. If the app isn't sure which job an email belongs to, it asks rather than guessing. See §7d. |
 | D16 | Government forms: just track them for now | The app does **not** fill in or sign the Consent Form or Authority to Represent (those live in Dochub). You handle those. It **does** record which agency is representing you for which job, so you don't get submitted twice by mistake. See §7d. |
 | D17 | How we check other people want this | **Build for yourself first, no upfront interviews.** The founder is confident from lived experience, so the first proof is real results on the founder's own applications. The network of contractors already known is kept as a safety net to sanity-check anytime (no cold outreach). See R2 in §11. |
+| D18 | What we build first (the first slice) | **"Find jobs and tell me if they're worth applying for."** One thin slice end to end: quick setup, capture a job (paste or forward, not auto-search yet), and show the red/amber/green signal with a reason. The writing help is the **second** slice. See §12. |
 
 ---
 
@@ -595,6 +596,33 @@ them in the grilling sessions.
 | R1 | **People still use it between job hunts.** A tool only opened while hunting lets your profile go stale and never builds up. | **Addressed (D11/D12).** Positioned as a job-hunt tool with two small reasons to return (a contract-end wake-up and a quiet pay signal), riding the short contractor cycle. | People come back via the wake-up, and the pay signal earns an open. Still a real risk if neither pulls. |
 | R2 | **This isn't just my problem.** Built from one person's experience. Is the burnout a whole-market problem or just a me problem? | **Carried, not tested (D17).** Founder is confident from years of living it and seeing others struggle, and chose to build for personal use first rather than run interviews. The network is there as a safety net to check anytime. | Founder's own real results using it, and, if doubt creeps in, a few honest chats with contractors already known (no cold outreach). |
 | R3 | **The memory really does beat starting cold.** "The app gets cheaper and better than a fresh ChatGPT chat as it learns you." | **Addressed in the design (D13/D14, §7c).** Rests on your achievements plus your writing style; writing in the app captures the style; achievements carry the first day. Only proven by building it. | Writing in the app is clearly faster than a cold ChatGPT chat from the first use, and drafts sound more like you over time. |
+
+## 12. Where we start building (the first slice)
+
+We're building for the founder first (D17), and the win that keeps the founder motivated is
+**finding jobs and knowing which are worth applying for**, not the writing. So the first slice
+is exactly that, kept thin but running end to end (D18):
+
+1. **Quick setup** (so there's something to score against): the five things from §7a, in under
+   two minutes.
+2. **Capture a job:** paste a link or forward an email, and the app reads out the details.
+   This leans on the reliable base from D2. It is **not** auto-searching SEEK or LinkedIn yet;
+   that comes later.
+3. **Show the signal:** red / amber / green plus one short reason.
+
+Two honest limits to hold in mind for this first slice:
+
+- **The "search" here is capture, not magic.** You still bring the job to the app (paste or
+  forward). Automatic pulling-in of jobs is a later addition, because it's the fragile part
+  the big sites fight hardest.
+- **Day-one scoring is the checkable half.** It can confidently handle pay, eligibility,
+  location and "already seen." The cleverer half (is this a real job, is it worth it) needs
+  history and grows over time, as set out in §8. Even the checkable half is worth it, because
+  it clears the obvious no's straight away.
+
+The writing help (§7c) is the **second** slice. This first slice still quietly builds the
+memory underneath (your setup and the jobs you capture), so slice two has something to stand
+on.
 
 ---
 
