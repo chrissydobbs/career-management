@@ -24,6 +24,8 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D10 | **Interview is a first-class event** | Its timing enters the system via **calendar-invite ingestion** (primary) or manual entry (fallback); it drives the reflection prompt, which is offered immediately but is **skippable / snoozable / pausable**. See §7b. | 2026-08-06 |
 | D11 | **Positioning: episodic + keep-warm** | Not an always-on daily companion. Primarily used during a search, riding the contractor cycle, with two low-effort keep-warm hooks: (1) a **contract-end trigger** that re-activates ~8 weeks before the current gig ends (end-date captured willingly), and (2) a passive **rate drip**. See §11. | 2026-08-06 |
 | D12 | **Rate signal = observed advertised rates** | The keep-warm rate drip and any benchmarking come from **rates stated in ingested job ads** ("roles like yours advertise ~$X–$Y") — observed, not invented. When ads are blank/messy, say **"not enough recent data"** rather than force a number. | 2026-08-06 |
+| D13 | **Tailoring is an in-app loop** | Tailoring happens **inside the product**, not external ChatGPT — otherwise the accept/reject signal that powers learned voice is lost. Human-in-the-loop, two-way; the AI never sends a statement unseen. See §7c. | 2026-08-06 |
+| D14 | **Moat = atoms + voice; bootstrap with atoms** | The moat is **tagged evidence atoms** (built passively) + **learned voice** (captured implicitly from edits, never by rating drafts); outcome-weighting is a slow-burn bonus. Cold start is bridged by atoms, and in-app tailoring must be *obviously* faster than ChatGPT from the first use. See §7c. | 2026-08-06 |
 
 ---
 
@@ -106,7 +108,7 @@ This is explicitly **not** "another CV/LinkedIn optimiser." It is the **end-to-e
 
 ### The flywheel
 
-```
+```text
 Search → Score → Tailor → Track → Interview → Outcome
    ↑                                              │
    └──────────  feeds back into  ─────────────────┘
@@ -276,12 +278,12 @@ No single input wins; support **all of them** and let the user choose by mood an
 
 All four dimensions earn their place — but they split into two classes with very different rules:
 
-| Dimension | Class | |
-|---|---|---|
-| **How I performed** — what landed, what I fumbled, what I'd say better | Subjective / private | |
-| **Do I even want it?** — gut feel on taking the role | Subjective / private | |
-| **Red flags & people** — "didn't like this person," bad vibe, culture warnings | Subjective / private | |
-| **Process & logistics** — who I met, next steps, timelines, what they asked | Factual / context | |
+| Dimension | Class |
+|---|---|
+| **How I performed** — what landed, what I fumbled, what I'd say better | Subjective / private |
+| **Do I even want it?** — gut feel on taking the role | Subjective / private |
+| **Red flags & people** — "didn't like this person," bad vibe, culture warnings | Subjective / private |
+| **Process & logistics** — who I met, next steps, timelines, what they asked | Factual / context |
 
 ### The privacy line — ironclad, and it has a design consequence
 
@@ -293,6 +295,33 @@ This draws a hard boundary that reconciles with the scoring model:
 - **Raw private reflections** ("this agency's people were useless") **never** feed cross-user signals or leave the user.
 
 So when §7/§8 talk about "agency track record," that signal is built from the **factual outcome log**, *not* from private candid text. Two data classes, two rulebooks.
+
+## 7c. Stateful tailoring — where the moat actually lives
+
+The tailoring loop is not "another CV optimiser" — it's the mechanism that builds and spends the moat (R3). Three things, in dependency order:
+
+### The moat is atoms + voice, not stored CVs
+
+- **What it is NOT:** storing your CV. That's trivially copyable — a competitor's user just pastes theirs into a cold model.
+- **Moat #1 — tagged evidence atoms.** Hundreds of your accomplishments, decomposed and tagged by capability, **built passively** (from uploaded CVs, past suitability statements, and every tailoring session) — never hand-entered. A cold prompt only gets the 2-page CV you pasted; the app reaches for the *right buried achievement* for *this* JD.
+- **Moat #2 — learned voice.** Which phrasings and framings you accept vs reject, learned across many statements, so drafts already sound like you instead of generic AI-slop you beat into shape.
+- **Moat #3 — outcome-weighting** (which statements got interviews) is a **slow-burn bonus, not a launch claim** — the feedback signal is sparse, delayed, and confounded. Stake the moat on #1 + #2; let #3 accrue.
+
+### Voice is captured implicitly — tailoring must be in-app
+
+Moat #2 only exists if the system **watches you tailor**. In your current ChatGPT workflow every accept/reject signal is thrown away. So:
+
+- **Tailoring happens in-app — non-negotiable.** External ChatGPT loses the signal and moat #2 never forms.
+- **Captured implicitly, never by rating drafts.** The statement you finally send, and the edits you made to get there, *are* the signal — kept sentences are positives, rewritten ones negatives. Same passive-capture principle as everywhere else.
+- **Human-in-the-loop, two-way** — the AI drafts and iterates *with* you; it never fires off a statement unseen.
+
+### The cold-start bootstrap — atoms earn the switch, voice compounds it
+
+The chicken-and-egg: it needs in-app use to learn your voice, but needs a learned voice to beat ChatGPT and earn the use. Bridged by **atoms, not voice**:
+
+- Day one the app can't sound like you yet — but it starts from your **pre-loaded atoms + the JD already in-system**, so you skip re-pasting and example-hunting. That alone makes it faster than a cold prompt *on the first use*.
+- That day-one speed earns the switch; voice then quietly compounds over the following weeks.
+- **The bar:** in-app tailoring must be *obviously* faster than ChatGPT from the very first use, or the habit wins and the voice signal is never captured. This is a hard product requirement, not an aspiration.
 
 ## 8. The cold-start sequencing truth
 
@@ -329,7 +358,7 @@ The load-bearing beliefs under the whole product. Each box we design assumes the
 |---|---------|--------|--------------------------|
 | R1 | **It survives between searches.** A low-frequency tool that only opens during a hunt lets the profile rot and the memory never compounds. | **Addressed (D11/D12).** Positioned episodic + keep-warm: contract-end trigger + observed-rate drip, riding the short contractor cycle rather than fighting frequency. | Users return via the re-activation trigger; the drip earns an open. Still a real risk if neither hook pulls. |
 | R2 | **n = 1 generalises.** Built from the founder's scars — but is the burnout a *market* problem or just a *me* problem? | **Open — highest unaddressed risk.** | A handful of other SEQ contractors recognise the loop and the demoralisation without prompting. (A validation activity, not a design decision.) |
-| R3 | **The statefulness moat is real.** "Accumulating memory makes cycle 400 cheaper and better than a cold prompt." | **Open — next to grill.** | A remembered profile produces a materially better/faster suitability statement than pasting CV+JD into a cold model. Building stateful tailoring *is* the test. |
+| R3 | **The statefulness moat is real.** "Accumulating memory makes cycle 400 cheaper and better than a cold prompt." | **Addressed in design (D13/D14, §7c).** Moat staked on atoms + voice; in-app tailoring captures the voice signal; atoms bootstrap the cold start. Validated only by building it. | In-app tailoring is *obviously* faster than a cold ChatGPT prompt from the first use, and drafts sound more like the user over time. |
 
 ---
 
