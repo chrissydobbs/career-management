@@ -35,6 +35,7 @@ The decisions we have made and agreed. Settled unless we revisit them here.
 | D14 | Why ChatGPT can't just replace this | Two things the app builds up that a fresh ChatGPT chat never has: a growing library of **your achievements** (collected automatically, never typed in by hand) and a feel for **how you write** (learned quietly from your edits). On day one the achievements alone make it faster than starting cold. See §7c. |
 | D15 | Three ways to build an application pack | You can **forward the agency's email** (the app matches it to the job and works out what's needed), have a pack **prepared in advance** when you apply, or build one **on demand**. If the app isn't sure which job an email belongs to, it asks rather than guessing. See §7d. |
 | D16 | Government forms: just track them for now | The app does **not** fill in or sign the Consent Form or Authority to Represent (those live in Dochub). You handle those. It **does** record which agency is representing you for which job, so you don't get submitted twice by mistake. See §7d. |
+| D17 | How we check other people want this | **Build for yourself first, no upfront interviews.** The founder is confident from lived experience, so the first proof is real results on the founder's own applications. The network of contractors already known is kept as a safety net to sanity-check anytime (no cold outreach). See R2 in §11. |
 
 ---
 
@@ -592,7 +593,7 @@ them in the grilling sessions.
 | # | The bet | Where it stands | How we'll know it's true |
 |---|---------|-----------------|--------------------------|
 | R1 | **People still use it between job hunts.** A tool only opened while hunting lets your profile go stale and never builds up. | **Addressed (D11/D12).** Positioned as a job-hunt tool with two small reasons to return (a contract-end wake-up and a quiet pay signal), riding the short contractor cycle. | People come back via the wake-up, and the pay signal earns an open. Still a real risk if neither pulls. |
-| R2 | **This isn't just my problem.** Built from one person's experience. Is the burnout a whole-market problem or just a me problem? | **Open. The biggest thing we haven't tested.** | A handful of other Brisbane contractors recognise the loop and the burnout without being led to it. This is something to go and check, not a design choice. |
+| R2 | **This isn't just my problem.** Built from one person's experience. Is the burnout a whole-market problem or just a me problem? | **Carried, not tested (D17).** Founder is confident from years of living it and seeing others struggle, and chose to build for personal use first rather than run interviews. The network is there as a safety net to check anytime. | Founder's own real results using it, and, if doubt creeps in, a few honest chats with contractors already known (no cold outreach). |
 | R3 | **The memory really does beat starting cold.** "The app gets cheaper and better than a fresh ChatGPT chat as it learns you." | **Addressed in the design (D13/D14, §7c).** Rests on your achievements plus your writing style; writing in the app captures the style; achievements carry the first day. Only proven by building it. | Writing in the app is clearly faster than a cold ChatGPT chat from the first use, and drafts sound more like you over time. |
 
 ---
