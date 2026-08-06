@@ -18,6 +18,8 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D4 | **Monetisation** | **Undecided — deliberately open.** Revisit once the wedge and value are proven; design so it doesn't foreclose candidate-subscription *or* hiring-side options. | 2026-08-06 |
 | D5 | **Day-one 'red' rules** | The four hard filters, all active: (1) rate below floor, (2) eligibility you **cannot** meet, (3) wrong location / unacceptable onsite, (4) already seen (duplicate). **Eligibility is three-state** — hold / can-obtain / can't-meet — and only *can't-meet* is red; "ability to obtain" stays in play. See §7a. | 2026-08-06 |
 | D6 | **Capture model** | **Extraction-first.** User pastes a link / forwards an email; system extracts title, client, rate, ref, closing date; user only corrects. → *Parsing quality is a first-order requirement, not a nicety.* | 2026-08-06 |
+| D7 | **Onboarding** | **Under 2 minutes**, capturing five things once — rate floor (PAYG & ABN), locations & onsite tolerance, role types & seniority, hard-no's, and eligibility+obtainability — via lightweight inputs, import-assist, and progressive depth. Red rules are user-set here (§7a). | 2026-08-06 |
+| D8 | **Ambiguous clearance** | When "must hold" vs "can obtain" can't be told apart, show **amber + "verify"** — never a silent red. Never bin a winnable role on a guess. | 2026-08-06 |
 
 ---
 
@@ -188,12 +190,15 @@ Because we build the spine first (D3) with extraction-first capture (D6) and a t
 
 The four hard filters (D5) are **not hardcoded** — they are the user's own criteria, **selected during onboarding and editable anytime.** Each user's traffic light is calibrated to *their* floor, *their* eligibility, *their* locations. This is what lets one consistent surface adapt to every individual (the long-term platform promise, delivered cheaply from the start).
 
-Onboarding therefore captures, once, the Half-A facts that drive the day-one light:
+Onboarding captures, once, the Half-A facts that drive the day-one light — **all four categories below, in under 2 minutes:**
 
-- **Rate floor** (with PAYG+super vs ABN+GST understood).
-- **Eligibility held** — clearance level, working rights/citizenship, key registrations.
-- **Location / onsite tolerance.**
-- **Deal-breakers** — the red rules the user switches on.
+- **Rate floor** — on both bases (PAYG+super *and* ABN+GST).
+- **Locations & onsite tolerance** — where I'll work, how many onsite days I'll accept.
+- **Role types & seniority** — the titles/levels I actually want, so obvious mismatches drop out.
+- **Hard no's / deal-breakers** — named clients, agencies, industries, or arrangements I refuse.
+- **Eligibility & obtainability** — what I hold, and whether I can/will obtain clearances (the three-state rule).
+
+**The 2-minute target is a constraint on *how*, not *whether*.** All five are captured, but via **lightweight inputs** (ranges, chips, toggles — not free-text forms), with **import-assist** (infer from an uploaded CV / pasted LinkedIn, confirm only the gaps) and **progressive depth** (ask the essentials now; drip-feed refinements over the first few roles when they're relevant). Depth without a chore.
 
 ### Eligibility is three states, not two (correction)
 
@@ -203,7 +208,9 @@ A clearance/registration requirement is **not** "hold it or you're out." The JD 
 2. **Can obtain it** — the role says "ability to obtain" / "eligible for" a clearance, and you're a citizen willing to be vetted (many roles sponsor this) → **not a red; this is green/amber, keep it in play.**
 3. **Can't meet it** — the role needs a clearance held *day one* that you don't have, or requires citizenship/working rights you can't satisfy → **red.**
 
-**Only state 3 is an instant reject.** Conflating states 2 and 3 wrongly bins winnable federal/sponsored roles. So the extraction has to read *how* the requirement is phrased ("current NV1" vs "ability to obtain NV1"), and onboarding has to capture not just what the user *holds* but what they're *eligible and willing to obtain.*
+**Only state 3 is an instant reject.** Conflating states 2 and 3 wrongly bins winnable federal/sponsored roles. So the extraction has to read *how* the requirement is phrased ("current NV1" vs "ability to obtain NV1"), and onboarding captures the user's **obtainability** (eligible/willing to be vetted?) as a field — not just what they *hold*. This is a system field, captured once; the platform never needs to interrogate the person beyond it.
+
+**Ambiguous requirement → amber, never a silent red.** When extraction can't tell "must hold" from "can obtain," the light shows **amber with a "clearance requirement unclear — verify"** flag. A winnable role is never silently binned on a guess.
 
 ### Trust tiers — not all reasons are trusted equally
 
@@ -231,7 +238,8 @@ Seeded facts from the founder, who is the first real user:
 
 - **Clearance: none currently held — but obtainability TBD (citizenship / willingness to be vetted).** → Roles requiring a clearance *held day one* are red; roles saying *"ability to obtain"* stay in play if the founder is eligible and willing. **Correction to the earlier over-narrowing:** the pool is **not** just state-gov + private — it includes federal/sponsored roles where clearance is obtainable. The true auto-red is only state 3 above. (Where the founder isn't eligible/willing to obtain, the state-gov + private SEQ pool is the fallback.)
 - **Capture tolerance: almost nothing typed** — reinforces D6.
-- **Rate floor: TBD** — to capture at onboarding.
+
+*(Personal facts like the founder's own rate floor, clearance obtainability, and locations are **captured by onboarding at use time** — they're system fields, not things this document needs to pin down. We design the fields, not the founder's answers.)*
 
 ## 8. The cold-start sequencing truth
 
@@ -251,7 +259,7 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 4. **Reflection capture UX** — how to make the crown-jewel subjective data effortless to record in the emotional moment right after an interview.
 5. **Motivation & dignity as design requirements** — the product does psychological work, not just functional. How does "this took 4 minutes and is building into something" replace "this took 3 hours and vanished"?
 6. ~~**The spine's decision surface**~~ — **Resolved (§7a):** minimum record = ref + rate + title/client/source/closing (+ JD text captured); red rules are personal and set at onboarding; reasons have trust tiers. Still open underneath: how good extraction has to be to feel effortless (ties to Q3-underneath).
-7. **Rate floor & onboarding set** *(new)* — the founder's rate floor is still TBD; more broadly, what exactly does the onboarding flow capture, once, to calibrate the day-one traffic light without feeling like a chore?
+7. ~~**Rate floor & onboarding set**~~ — **Resolved (D7, §7a):** under 2 minutes; captures rate floor (PAYG & ABN), locations & onsite, role types & seniority, hard-no's, eligibility+obtainability; lightweight inputs + import-assist + progressive depth. Still open underneath: the exact input widgets that make five categories feel like two minutes.
 
 ## 10. Explicitly out of scope (for now)
 
