@@ -22,6 +22,8 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D8 | **Ambiguous clearance** | When "must hold" vs "can obtain" can't be told apart, show **amber + "verify"** — never a silent red. Never bin a winnable role on a guess. | 2026-08-06 |
 | D9 | **Reflections are private forever** | Raw reflections are the user's alone — never shown to agents/employers, never shared, never fed into cross-user signals. Candour depends on this being absolute. Scoring signals (e.g. agency track record) come from the *factual outcome log*, not private text. See §7b. | 2026-08-06 |
 | D10 | **Interview is a first-class event** | Its timing enters the system via **calendar-invite ingestion** (primary) or manual entry (fallback); it drives the reflection prompt, which is offered immediately but is **skippable / snoozable / pausable**. See §7b. | 2026-08-06 |
+| D11 | **Positioning: episodic + keep-warm** | Not an always-on daily companion. Primarily used during a search, riding the contractor cycle, with two low-effort keep-warm hooks: (1) a **contract-end trigger** that re-activates ~8 weeks before the current gig ends (end-date captured willingly), and (2) a passive **rate drip**. See §11. | 2026-08-06 |
+| D12 | **Rate signal = observed advertised rates** | The keep-warm rate drip and any benchmarking come from **rates stated in ingested job ads** ("roles like yours advertise ~$X–$Y") — observed, not invented. When ads are blank/messy, say **"not enough recent data"** rather than force a number. | 2026-08-06 |
 
 ---
 
@@ -319,6 +321,16 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 - Horizontal launch across all user types simultaneously — deferred until the contractor wedge is won.
 - Employer/recruiter-side product — candidate-first; revisit only with eyes open on the conflict it introduces.
 
+## 11. Risks & assumptions we're betting on
+
+The load-bearing beliefs under the whole product. Each box we design assumes these hold. Being tested through the grilling sessions.
+
+| # | The bet | Status | How we'll know it's true |
+|---|---------|--------|--------------------------|
+| R1 | **It survives between searches.** A low-frequency tool that only opens during a hunt lets the profile rot and the memory never compounds. | **Addressed (D11/D12).** Positioned episodic + keep-warm: contract-end trigger + observed-rate drip, riding the short contractor cycle rather than fighting frequency. | Users return via the re-activation trigger; the drip earns an open. Still a real risk if neither hook pulls. |
+| R2 | **n = 1 generalises.** Built from the founder's scars — but is the burnout a *market* problem or just a *me* problem? | **Open — highest unaddressed risk.** | A handful of other SEQ contractors recognise the loop and the demoralisation without prompting. (A validation activity, not a design decision.) |
+| R3 | **The statefulness moat is real.** "Accumulating memory makes cycle 400 cheaper and better than a cold prompt." | **Open — next to grill.** | A remembered profile produces a materially better/faster suitability statement than pasting CV+JD into a cold model. Building stateful tailoring *is* the test. |
+
 ---
 
 ## Core principles (the test every decision must pass)
@@ -332,3 +344,4 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 7. **Win the Australian contractor wedge completely before generalising.**
 8. **Raw reflections are private forever** — the candour is the value, and it only exists if the user knows it never leaves them.
 9. **Never bin a winnable role on a guess** — ambiguity resolves to amber-and-verify, not a silent red.
+10. **No fabricated numbers** — every figure shown (rates, benchmarks) is *observed* from real data; when there isn't enough, say so rather than invent one.
