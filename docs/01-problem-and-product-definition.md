@@ -1,394 +1,616 @@
-# Career Management Platform — Problem & Product Definition
+# Career Management Platform: Problem and Product Definition
 
-> **Status:** Living document. This is *thinking made concrete*, not a spec.
-> No technology, architecture, or implementation decisions are captured here yet — by design.
+> **Status:** A living document. This is our thinking written down, not a build spec.
+> We have not made any technology or design decisions yet, on purpose.
 > **Last updated:** 2026-08-06
+
+A quick note on language: this document is written in plain English. A few real-world
+terms from Australian contracting stay as they are, because they are the actual words
+used in the market: *suitability statement*, *Authority to Represent (ATR)*, *Consent
+Form*, *Dochub*, *PAYG* and *ABN* (two ways a contractor can be paid and taxed),
+*super*, *day rate*, *security clearance* (Baseline / NV1 / NV2), *SEEK*, *LinkedIn*,
+*SmartJobs*, and a job's *reference number*.
 
 ---
 
 ## Decisions log
 
-Founder decisions made explicitly. These are settled unless revisited here.
+The decisions we have made and agreed. Settled unless we revisit them here.
 
-| # | Decision | Choice | Date |
-|---|----------|--------|------|
-| D1 | **Decision surface** — how "worth applying or not" is shown | **Traffic light + one plain-English reason** (e.g. "NV1 required — you don't hold it"). Fast, trustable, low cognitive load. | 2026-08-06 |
-| D2 | **Getting jobs into the system at launch** | **A mix:** manual paste-link / forward-email as the reliable floor, plus browser-extension capture and best-effort aggregation layered on where they work. Product must stay valuable on the manual floor alone. | 2026-08-06 |
-| D3 | **MVP heart — what we design & build first** | **The tracker / spine** — the append-only memory of every role, action, agent and outcome. Useful even with manual entry; makes every other box stop starting from scratch. | 2026-08-06 |
-| D4 | **Monetisation** | **Undecided — deliberately open.** Revisit once the wedge and value are proven; design so it doesn't foreclose candidate-subscription *or* hiring-side options. | 2026-08-06 |
-| D5 | **Day-one 'red' rules** | The four hard filters, all active: (1) rate below floor, (2) eligibility you **cannot** meet, (3) wrong location / unacceptable onsite, (4) already seen (duplicate). **Eligibility is three-state** — hold / can-obtain / can't-meet — and only *can't-meet* is red; "ability to obtain" stays in play. See §7a. | 2026-08-06 |
-| D6 | **Capture model** | **Extraction-first.** User pastes a link / forwards an email; system extracts title, client, rate, ref, closing date; user only corrects. → *Parsing quality is a first-order requirement, not a nicety.* | 2026-08-06 |
-| D7 | **Onboarding** | **Under 2 minutes**, capturing five things once — rate floor (PAYG & ABN), locations & onsite tolerance, role types & seniority, hard-no's, and eligibility+obtainability — via lightweight inputs, import-assist, and progressive depth. Red rules are user-set here (§7a). | 2026-08-06 |
-| D8 | **Ambiguous clearance** | When "must hold" vs "can obtain" can't be told apart, show **amber + "verify"** — never a silent red. Never bin a winnable role on a guess. | 2026-08-06 |
-| D9 | **Reflections are private forever** | Raw reflections are the user's alone — never shown to agents/employers, never shared, never fed into cross-user signals. Candour depends on this being absolute. Scoring signals (e.g. agency track record) come from the *factual outcome log*, not private text. See §7b. | 2026-08-06 |
-| D10 | **Interview is a first-class event** | Its timing enters the system via **calendar-invite ingestion** (primary) or manual entry (fallback); it drives the reflection prompt, which is offered immediately but is **skippable / snoozable / pausable**. See §7b. | 2026-08-06 |
-| D11 | **Positioning: episodic + keep-warm** | Not an always-on daily companion. Primarily used during a search, riding the contractor cycle, with two low-effort keep-warm hooks: (1) a **contract-end trigger** that re-activates ~8 weeks before the current gig ends (end-date captured willingly), and (2) a passive **rate drip**. See §11. | 2026-08-06 |
-| D12 | **Rate signal = observed advertised rates** | The keep-warm rate drip and any benchmarking come from **rates stated in ingested job ads** ("roles like yours advertise ~$X–$Y") — observed, not invented. When ads are blank/messy, say **"not enough recent data"** rather than force a number. | 2026-08-06 |
-| D13 | **Tailoring is an in-app loop** | Tailoring happens **inside the product**, not external ChatGPT — otherwise the accept/reject signal that powers learned voice is lost. Human-in-the-loop, two-way; the AI never sends a statement unseen. See §7c. | 2026-08-06 |
-| D14 | **Moat = atoms + voice; bootstrap with atoms** | The moat is **tagged evidence atoms** (built passively) + **learned voice** (captured implicitly from edits, never by rating drafts); outcome-weighting is a slow-burn bonus. Cold start is bridged by atoms, and in-app tailoring must be *obviously* faster than ChatGPT from the first use. See §7c. | 2026-08-06 |
-| D15 | **Pack assembly = three triggers** | A pack can be assembled by **forwarding the agent's email** (primary; matches to the role record, parses the request), **pre-building at apply time**, or a **manual "make a pack"** action. Uncertain matches are confirmed with the user, never guessed. See §7d. | 2026-08-06 |
-| D16 | **Forms are track-only (day one)** | The app does **not** fill or sign the Consent Form / ATR (external, Dochub) — the user handles those. It **does** track the **ATR fact** (which agency represents the user for which ref) to power double-submission protection. Owning the form flow is deferred. See §7d. | 2026-08-06 |
+| # | Decision | What we chose |
+|---|----------|---------------|
+| D1 | How the app tells you whether to apply | A simple **red / amber / green** signal plus **one short reason** (for example, "needs a clearance you don't have"). Quick to read, easy to trust. |
+| D2 | How jobs get into the app | **A mix.** The reliable base is you pasting a link or forwarding an email. On top of that, a browser helper and automatic pulling-in of jobs where it works. The app must still be useful even if only the manual base works. |
+| D3 | What we build first | The **tracker**: the app's running memory of every job, action, agency and outcome. It is useful even if you type things in by hand, and everything else builds on it. |
+| D4 | How it makes money | **Left open on purpose.** Decide later once we've proven people want it. Design so we can still choose to charge job seekers *or* charge employers/recruiters later. |
+| D5 | The "don't bother" rules | Four rules that mark a job red, all switched on: (1) pay below your minimum, (2) you can't meet the requirements, (3) wrong location or too many office days, (4) you've already seen it. Note: requirements like clearance have three states, see §7a. |
+| D6 | How details get captured | **The app reads them for you.** You paste a link or forward an email and the app pulls out the title, client, pay, reference number and closing date. You only fix mistakes. Reading this accurately is a core requirement, not a nice extra. |
+| D7 | Setup (first-time questions) | **Under 2 minutes.** Ask five things once: your minimum pay (both PAYG and ABN), where you'll work and how many office days, the roles you want, your absolute no's, and what you're eligible for. Use quick taps and sliders, fill in what it can from your CV, and ask the rest gradually. |
+| D8 | When a clearance requirement is unclear | If the app can't tell whether you must already hold a clearance or just be able to get one, show **amber and "please check"**. Never quietly reject a job on a guess. |
+| D9 | Your private notes stay private, forever | Your honest notes ("didn't like this person") are yours alone. Never shown to agencies or employers, never shared, never used in anything that touches other users. The app's judgements about agencies come from **what actually happened** (did they reply, did you get an interview), not from your private notes. See §7b. |
+| D10 | Interviews are a proper event in the app | The app learns when an interview is happening from a **calendar invite** (or you enter it). That's what prompts you to jot a reflection afterwards. The prompt can always be skipped, delayed or paused. See §7b. |
+| D11 | What the app is: a job-hunt tool with small reasons to return | **Not** a daily app you're expected to live in. Mostly used while job hunting. Two small things bring you back between hunts: (1) it knows when your current contract ends and wakes up about 8 weeks before, and (2) it quietly shows what similar jobs are paying. See §11. |
+| D12 | Where pay figures come from | Only from **real numbers stated in job ads** the app has already seen ("jobs like yours are advertising about $X to $Y"). Never invented. If there isn't enough real data, it says so. |
+| D13 | Writing happens inside the app | You do your CV and suitability-statement writing **in the app**, not in ChatGPT. That's the only way the app can learn how you like to write. You and the app work on it together, and nothing is ever sent without you seeing it. See §7c. |
+| D14 | Why ChatGPT can't just replace this | Two things the app builds up that a fresh ChatGPT chat never has: a growing library of **your achievements** (collected automatically, never typed in by hand) and a feel for **how you write** (learned quietly from your edits). On day one the achievements alone make it faster than starting cold. See §7c. |
+| D15 | Three ways to build an application pack | You can **forward the agency's email** (the app matches it to the job and works out what's needed), have a pack **prepared in advance** when you apply, or build one **on demand**. If the app isn't sure which job an email belongs to, it asks rather than guessing. See §7d. |
+| D16 | Government forms: just track them for now | The app does **not** fill in or sign the Consent Form or Authority to Represent (those live in Dochub). You handle those. It **does** record which agency is representing you for which job, so you don't get submitted twice by mistake. See §7d. |
 
 ---
 
 ## 0. How to read this document
 
-This is the shared brain for the product. It captures **what problem we're solving, for whom, and why** — grounded in the founder's own lived experience as an Australian government IT contractor, not in a market report.
+This is the shared brain for the product. It sets out **what problem we're solving, who
+for, and why.** It comes from real, lived experience as an Australian government IT
+contractor, not from a market report.
 
-It deliberately stops *before* features, UI, and technology. When we start designing screens and systems, they must trace back to something written here. If a proposed feature doesn't serve a problem on this page, it doesn't belong.
+It stops short of features, screens and technology on purpose. When we do start designing
+those, they have to trace back to something on this page. If a feature idea doesn't serve
+a problem written here, it doesn't belong.
 
-Everything here is provisional and meant to be argued with. Open questions are tracked in §9.
+Everything here is provisional and meant to be argued with. Things we still haven't
+settled are listed in §9.
 
 ---
 
 ## 1. The problem, in one paragraph
 
-Managing a career in Australia is fragmented, repetitive, and demoralising. The same information is re-entered across SEEK, LinkedIn, recruiters, and government portals. Every role demands a bespoke resume and suitability statement, written from scratch, at the moment you know the least about whether it's worth writing — and then sent into a void that almost never replies. The candidate is the least-informed, least-powerful party in every interaction, and the system quietly trains people to give up.
+Managing a career in Australia is scattered, repetitive and demoralising. You enter the
+same information again and again across SEEK, LinkedIn, recruiters and government portals.
+Every job wants a fresh, tailored CV and suitability statement, written from scratch, at
+the exact moment you know the least about whether it's even worth writing. Then you send
+it off and usually hear nothing back. Throughout, you (the candidate) are the person with
+the least information and the least power in the room, and the whole process slowly trains
+people to give up.
 
 ## 2. The real problem (not the obvious one)
 
-The obvious framing is **time and friction** — too much re-typing, too many platforms. That's real, but it's the symptom. Building against it produces a slightly better resume-builder in a crowded, commoditising market.
+The obvious version is "too much re-typing across too many sites." That's real, but it's
+only the surface. If we build against just that, we end up with a slightly nicer CV
+builder in a crowded market.
 
 Two deeper problems sit underneath:
 
-1. **Total information and power asymmetry.** The candidate never knows what a role really pays, whether it's genuinely open, whether the recruiter is working for them, whether the offer is good, or what their next move should be. The re-typing is annoying; **deciding blind is what costs people years and tens of thousands of dollars.**
-2. **High-stakes, low-frequency decisions made without a coach.** People make ~8–12 consequential career moves in a lifetime, each under stress, each with no trusted advisor who knows *both them and the market.* The wealthy have mentors and executive coaches. Everyone else has a mate's opinion and a Google search.
+1. **You're always the least-informed person in the room.** You don't know what a job
+   really pays, whether it's genuinely open, whether the recruiter is working for you or
+   the client, whether an offer is good, or what your smartest next move is. The re-typing
+   is annoying, but **making big decisions blind is what costs people years and thousands
+   of dollars.**
+2. **Huge decisions, made rarely, with no coach.** People make maybe 8 to 12 big career
+   moves in a whole lifetime, each one stressful, each one without a trusted advisor who
+   knows both you and the market. Wealthy people have mentors and career coaches. Everyone
+   else has a mate's opinion and a Google search.
 
-### The villain, named precisely
+### What actually causes the burnout
 
-The pain is not "time." It is:
+The pain isn't just "time." It's three things stacked on top of each other:
 
-> **effort × uncertainty × no-feedback**
+- how much **effort** each application takes,
+- how **uncertain** the outcome is, and
+- how little **feedback** you ever get.
 
-You spend your most expensive effort (a bespoke suitability statement) at the point of *least* information, and get *nothing* back to tell you whether it mattered. That loop — high sunk cost per shot into a feedback-free void, repeated until the energy is gone — is the machine that produces burnout. **Every product decision is measured against whether it shrinks one of those three terms.**
+You put your biggest effort (a tailored suitability statement) in at the point of least
+information, and get nothing back to tell you if it mattered. Do that hundreds of times
+into silence and you burn out. That's the machine we're trying to break. **Every decision
+we make should reduce at least one of those three things.**
 
-## 3. Who this is for (the wedge)
+## 3. Who this is for
 
-**Australian professional contractors — starting with Queensland / government ICT contractors.**
+**Australian contractors, starting with Queensland government and private IT contractors
+around Brisbane.**
 
-This is chosen deliberately, from the founder's own scars, over a broad horizontal "everyone" launch:
+We're deliberately starting narrow, with one group we understand deeply, rather than
+trying to serve everyone at once:
 
-- **Recurring, acute pain** — a new contract every 6–12 months, forever.
-- **Real money** — day rates high enough that saved time and better rate negotiation pay for the product.
-- **Quantifiable value** — "you're 8% under market," "don't waste a statement on this one."
-- **Naturally recurring engagement** — extensions and re-contracting keep the tool warm (the retention problem that kills most career products).
-- **Deeply underserved** — global tools get none of the Australian/government specifics right.
+- **The pain comes back again and again.** A new contract every 6 to 12 months, forever.
+- **There's real money in it.** Day rates are high enough that saving time and negotiating
+  a better rate easily pays for the product.
+- **The value is easy to see.** "You're a bit under the going rate," or "don't waste your
+  time on this one."
+- **They naturally come back.** Extensions and new contracts keep people returning, which
+  is exactly the problem that kills most career apps (people use them once and forget them).
+- **They're badly served today.** Overseas tools get none of the Australian and government
+  details right.
 
-Horizontal ("perm, grads, execs, career-changers, consistent experience for all") remains the **long-term platform vision** — but it is a dangerous *starting* strategy. Win this wedge completely first.
+Serving everyone (permanent staff, graduates, executives, career changers) is the
+**long-term goal**, but a dangerous place to *start*. Win this one group completely first.
 
-### Australia-specific texture that changes the product
+### Australian details that genuinely change the product
 
-- **Total remuneration is genuinely hard to compare** — "package including super" vs "plus super" (super is 12% from July 2025), salary packaging, NFP/health caps, novated leases, FBT.
-- **The contractor economy** — day rates, agency margins, ABN vs PAYG (`$100/hr + super PAYG` vs `$112/hr + GST ABN`), extensions, PSI rules.
-- **Government as its own genre** — APS/state levels, merit selection, addressing selection criteria, capability frameworks, and **security clearances** (Baseline/NV1/NV2) as a first-class eligibility filter.
-- **Authority to Represent & double-submission** — you can be represented by only one agency per role reference number; being submitted twice can disqualify you.
-- **Working rights / visa status** as a primary hiring filter.
-- **Professional registration & clearances** as hard, verifiable eligibility facts.
-- **Tall-poppy culture** — Australians are culturally uncomfortable self-promoting, which makes resumes, LinkedIn, and interview self-advocacy genuinely harder. Helping people advocate authentically (not American hype) is a real angle.
+- **Comparing total pay is hard here.** "Package including super" versus "plus super"
+  (super is 12% from July 2025), salary packaging, health and charity caps, novated leases.
+  Two offers with the same headline number can be worth very different amounts.
+- **The contractor world.** Day rates, agency margins, and two ways of being paid: PAYG
+  (for example $100/hr plus super) or through an ABN ($112/hr plus GST). Plus extensions
+  and the tax rules around all of it.
+- **Government hiring is its own world.** Set pay levels, merit-based selection, addressing
+  selection criteria, and **security clearances** (Baseline / NV1 / NV2) as a hard filter
+  on who can even apply.
+- **Authority to Represent.** Only one agency can put you forward for a given job. If two
+  submit you for the same job, you can be knocked out. So who represents you for which job
+  actually matters.
+- **Working rights and visa status** are a first filter in a lot of hiring.
+- **Registrations and clearances** are hard, checkable facts about who's eligible.
+- **"Tall poppy" culture.** Australians are uncomfortable blowing their own trumpet, which
+  makes CVs, LinkedIn and interviews genuinely harder here. Helping people sell themselves
+  in a way that still sounds Australian (not American hype) is a real opportunity.
 
-## 4. The founder's lived workflow (the ground truth)
+## 4. The lived process this is built from
 
-The exact loop this product exists to break, as lived:
+The exact loop the product exists to break, as actually experienced:
 
-1. **Doom-scroll** SEEK / LinkedIn / SmartJobs. Hours. Terrible UIs. The same role appears under three agencies.
-2. **One-click "apply."** This is *theatre* — an expression of interest dumped to an agent's inbox. ATS may or may not parse you. A human may or may not look. **Zero feedback.**
-3. **The agent bites (or doesn't).** If they do, an email arrives (see the RoadTek / ref `1651209` example): *now* send an updated resume in Word, *now* write a 1–2 page suitability statement against the JD, *now* sign the Consent Form and **Authority to Represent** via Dochub — "once shortlisted."
-4. **Hours spent** compiling a bespoke pack for *this* role.
-5. **Sent into the void.** Silence, unless you're one of the few selected for interview.
+1. **Endless scrolling** on SEEK, LinkedIn and SmartJobs. Hours of it. Clunky sites. The
+   same job showing up under three different agencies.
+2. **One-click "apply,"** which is mostly for show. It just drops your details into an
+   agent's inbox. A computer may or may not read it, a person may or may not look. You get
+   no feedback either way.
+3. **The agent gets interested (or doesn't).** If they do, you get an email (like the
+   RoadTek one, reference `1651209`): now send an updated CV in Word, now write a one to
+   two page suitability statement for this job, now sign the Consent Form and Authority to
+   Represent in Dochub.
+4. **Hours of work** putting together a tailored pack for this one job.
+5. **Silence.** Unless you're one of the few picked for interview.
 6. **Repeat, thousands of times, until the energy is gone.**
 
-Two facts from the founder that shaped everything below:
+Two things from experience that shaped everything below:
 
-- **On tailoring:** *"I upload my CV, the JD, the criteria, and ask AI to write it — then iterate 50 million times."* → The villain is **statelessness**. The AI has no memory of you or your last 400 statements, so you re-teach it your voice every single time.
-- **On ghost roles:** *"I've never thought about whether a role is real — is there a way to tell?"* → If a veteran of thousands of applications can't tell, **no individual can.** The asymmetry is total. That's not naivety; it's the market gap.
+- **On writing:** "I upload my CV, the job description and the criteria, ask AI to write
+  it, then go back and forth a hundred times." The core problem is that the AI has **no
+  memory**. It doesn't know you or your last 400 statements, so you re-teach it how you
+  write every single time.
+- **On fake jobs:** "I've honestly never known whether a job is real. Is there a way to
+  tell?" If someone who has applied thousands of times can't tell, then no single person
+  can. Nobody has the information. That's not naivety, that's the gap in the market.
 
-## 5. The core insight: the thread *is* the product
+## 5. The core idea: joining the steps up is the product
 
-Every individual box already exists as a standalone product — job search, CV tailorer, tracker, interview-prep generator. **None of them talk to each other, or to a memory of you.** What doesn't exist is the *continuity* between them.
+Every single step already exists as its own product: job search, CV writer, application
+tracker, interview-prep tool. **None of them talk to each other, or remember you.** The
+thing that doesn't exist is the joined-up thread running through all of them.
 
-This is explicitly **not** "another CV/LinkedIn optimiser." It is the **end-to-end process**, connected by a spine of memory.
+This is clearly **not** "another CV or LinkedIn tidier." It's the **whole process, end to
+end,** held together by one memory of you.
 
-### The flywheel
+### The loop that builds on itself
 
 ```text
-Search → Score → Tailor → Track → Interview → Outcome
-   ↑                                              │
-   └──────────  feeds back into  ─────────────────┘
-        (Score & the career profile get smarter)
+Search -> Score -> Write -> Track -> Interview -> Outcome
+   ^                                                 |
+   |__________  feeds back in  ______________________|
+        (the scoring and your profile get smarter)
 ```
 
-Every action leaves a residue that makes the next cycle cheaper and smarter:
+Every action leaves something behind that makes the next round quicker and smarter:
+
+- The jobs you track teach the app which agencies and job types actually go somewhere
+  **for you.**
+- Each statement you write (with your input) adds to your profile, so the next one starts
+  closer to how you write. The back-and-forth shrinks over time.
+- Each outcome you record (interview, silence, "this agent is useless") is exactly the
+  feedback the market never gives you, and it sharpens "should I apply?" for next time.
+
+**The hard-to-copy part is the memory that builds up, not the writing.** AI writing is
+becoming cheap and everywhere. Search is the thing the big sites guard hardest. What's
+defensible is the memory that makes your 400th application a fraction of the effort of
+your first, and a better one.
+
+### A deliberate choice about what kind of product this is
+
+Making applications cheaper must **not** quietly turn into "apply to more." The cure for
+burnout is **less effort per application, plus real feedback, aimed at fewer, better-chosen
+jobs.** A product brave enough to say "don't apply to any of these today" is the one that
+gives you your energy back. Quality and aim over speed and volume.
+
+## 6. The career memory (the core the rest plugs into)
+
+This is the heart of the app. "Should I apply?" isn't a feature we build in isolation. It's
+worked out from three things: what the app knows about **you**, what it knows about **this
+job**, and what it has learned from **every job before this one.**
+
+**The rule we hold ourselves to:** a piece of information earns its place only if it helps
+with one of four things: does the job match you, is it worth applying for, writing your
+application, or your private notes. If it helps with none of those, we don't store it.
+
+The memory has two clearly separate halves, plus a scoring layer worked out from them.
+
+### Half A: you (changes slowly, outlives any one job)
+
+Your single source of truth. Jobs come and go; this builds up.
+
+- **Eligibility facts:** where you are, your working rights and citizenship, security
+  clearances (Baseline / NV1 / NV2), and whether you could *get* a clearance if you don't
+  already have one (are you a citizen, willing to go through vetting). Also registrations,
+  notice period, and whether you work PAYG or ABN. These are the first gate, but not a
+  simple yes/no (see the three-state rule below). A job that needs a clearance you could
+  get is not an automatic no.
+- **Your preferences:** permanent versus contract, minimum pay, locations, industries,
+  roles you want, and absolute no's. This is what "does it match me" is measured against.
+- **Your achievements, in small reusable pieces.** This is the most important design idea
+  in the whole memory. Not one big CV blob, but lots of individual, tagged accomplishments
+  ("led the in-vehicle tracking rollout across X vehicles, delivered Y"). Writing a
+  suitability statement then becomes picking the right pieces and shaping them to the job.
+  **You never type these in by hand, because nobody thinks that way.** The app collects
+  them for you from CVs you upload, jobs you write for, and the edits you make. This is what
+  makes your 400th application cheap.
+- **Your skills,** tidied into a common list so jobs can be matched against them, ideally
+  lined up with how government describes the same skills.
+
+### Half B: each job and its story (one per opportunity, always turning over)
+
+The core unit of the tracker.
+
+- **Keyed on the reference number.** `1651209` pulls the same RoadTek job, showing up via
+  Hays and Peoplebank and SmartJobs, into **one** record. Without this the tracker is
+  noise, and the risk of being submitted twice is invisible. For LinkedIn or private jobs
+  with no reference number, match on title plus client plus pay plus the wording of the ad.
+- **Job details:** reference, title, client, where it came from, the ad text, pay,
+  duration, location, closing date, what's required.
+- **Agency contacts (there can be several per job):** which agent, when, how, what they
+  asked for, and **who holds Authority to Represent** for this job.
+- **What you did:** where and when you applied, which versions of the pack you sent, forms
+  signed.
+- **Responses and outcomes:** replied, went quiet, shortlisted, interview, offer,
+  rejection, each with a date.
+- **Your private notes:** how good the agent was, interview notes, "didn't like this
+  person," "what I'd do better." This is the most valuable thing here, because it's written
+  down nowhere else and it's what makes the app actually know you. **Private forever** (D9).
+  Captured in whatever way suits the moment, prompted by the interview (see §7b).
+- **The interview itself:** time, who, where or how, what was promised next. Learned from a
+  calendar invite or entered by hand, and it's what triggers your reflection (D10, §7b).
+- **The score and the reason for it at the time,** so we can later check whether the app
+  got it right and learn from it.
+
+### The rule that ties the two halves together: keep a timeline, don't overwrite
+
+Don't just record "status: rejected." Keep the **whole timeline**: applied Tuesday, agent
+emailed Thursday, sent the pack Friday, silence, rejected three weeks later. Two reasons:
+
+1. It gives you back the context when an agent pops up weeks later (the "wait, which job
+   was this again?" problem).
+2. The pattern and timing is exactly what teaches the app what a fake job's life looks like.
+
+### Two ways things get captured, everywhere
+
+- **Automatically,** from what you do in the app (made a pack, clicked apply).
+- **Added by you,** for the things the app can't see: an agent's phone call, interview
+  feedback, your private notes. This added-by-you information is the most valuable, so it
+  has to be effortless to add (for example, a quick voice note after an interview).
+
+## 7. Working out "should I apply?"
+
+None of this is stored. It's worked out fresh each time from you, this job, and your history.
+
+**Does it match you** (quick, works from day one, needs only your own information): can you
+meet the requirements, do your skills overlap, is the seniority right, is the pay okay, is
+the location okay. Rules you can't meet fail fast.
+
+**Is it worth applying for** (the valuable part, gets better as your history builds):
+
+- **Have I seen this already?** (matched on reference number)
+- **Does it smell like a fake job?**
+  - Things you could spot yourself, if you tracked them: the same job reappearing every few
+    weeks, closing dates that keep getting pushed back, the same job blasted out by five
+    agencies at once, or an agency that always asks for your pack and then goes quiet
+    (building a database, not filling a real role).
+  - Things only visible once there's enough history: an agency, client or role type where
+    almost nobody ever gets an interview, which you'd never spot from a single ad.
+- **This agency's track record with you:** do they ever actually move you forward?
+- **Pay** versus your minimum and versus the market.
+- **How long it's been sitting there.**
+
+**Is it worth the effort:** given how winnable it looks, and whether you can reuse existing
+material or have to write from scratch, is it worth your energy? This is where the app is
+brave enough to say "don't bother with any of these today."
+
+## 7a. The smallest job record, and the day-one signal
+
+Because we're building the tracker first (D3), with the app reading details for you (D6),
+and a red/amber/green signal (D1), the question is: **what's the least we need to record
+about a job to still give a useful signal on day one?**
+
+### The "don't bother" rules are yours, set during setup
+
+The four red rules (D5) are **not fixed by us.** They're your own settings, chosen during
+setup and changeable anytime. Your signal is tuned to your minimum pay, your eligibility,
+your locations. This is how one simple signal can suit everyone: it's set by each person.
+
+Setup captures, once, the facts that drive the day-one signal. All five below, in under
+two minutes:
 
-- The role you tracked teaches the scorer which agencies and role-types actually convert **for you**.
-- The statement you tailored (with your input) enriches your profile, so the next one drafts closer to your voice — iteration count *falls over time*.
-- The outcome you record — interview, ghost, "this agent is useless" — is the signal the open market denies you, and it sharpens "worth applying or not" for every future role.
+- **Minimum pay,** both ways (PAYG plus super, and ABN plus GST).
+- **Locations and office days** you'll accept.
+- **Roles and seniority** you actually want, so obvious mismatches drop out.
+- **Absolute no's:** named clients, agencies, industries or arrangements you refuse.
+- **Eligibility:** what you hold, and what you could get (the three-state rule).
+
+**The two-minute target is about *how* we ask, not *whether*.** We still capture all five,
+but with quick taps and sliders (not long forms), by filling in what we can from an uploaded
+CV or LinkedIn and only asking about the gaps, and by asking the deeper stuff gradually over
+your first few jobs. Depth without the chore.
 
-**The moat is the accumulating memory, not the generation.** CV generation is commoditising to zero. Search is the incumbents' most-defended asset. The defensible core is the memory that makes cycle 400 cost a fraction of cycle 1 and land better.
+### Eligibility has three states, not two
 
-### The product philosophy fork (decided)
+A clearance or registration requirement is not simply "have it or you're out." The wording
+matters, and there are three cases:
 
-Cheaper applications must **not** quietly become "apply to more." The fix for burnout is **cheaper effort + a real feedback loop, aimed at fewer, better-chosen roles.** A product brave enough to say *"apply to none of these today"* is the one that gives the user their energy back. **Targeting and quality over volume and speed.**
+1. **You hold it:** the job wants a current clearance you already have. Fine.
+2. **You could get it:** the job says "ability to obtain" or "eligible for," and you're a
+   citizen willing to go through vetting (many jobs sponsor this). **Not a no. Keep it in
+   play.**
+3. **You can't meet it:** the job needs a clearance held from day one that you don't have,
+   or citizenship or working rights you can't satisfy. That's a no.
 
-## 6. The spine — the data model of a career
+**Only the third case is an automatic no.** Treating "could get it" as "can't have it"
+wrongly throws away winnable jobs. So the app has to read *how* the requirement is worded
+("current NV1" versus "ability to obtain NV1"), and setup records what you could get, not
+just what you hold. It's a setting captured once. The app never has to interrogate you
+beyond that.
 
-The spine is the heart. Item 2 ("is it worth applying?") is not a feature you build — it is a **function computed over the spine's data**:
+**When the wording is unclear, show amber, never a silent no.** If the app can't tell "must
+already hold" from "could get," it shows amber with "please check." A winnable job is never
+quietly binned on a guess.
 
-> `score = f( what the spine knows about YOU × what it knows about THIS ROLE × what it has learned from every role before )`
+### Not all reasons are trusted the same
 
-**Discipline:** every piece of data earns its place only if it feeds **fit, winnability, tailoring, or reflection.** If it feeds none, cut it.
+An important point: a rule being a deal-breaker for you is **not** the same as you trusting
+the app's judgement on it. All four are deal-breakers, but you'd only skip a job *without
+double-checking* when the reason is plain and checkable.
 
-The spine has two halves that stay separate, plus a derived layer.
+- **Trust it outright** (can confidently mark red, or even hide): pay below your minimum,
+  and jobs you've already seen. Objective and checkable.
+- **Show it, but let you decide** (never hidden): "you might not be eligible" (you trust
+  your own read on that) and "this agency has a poor track record with you" (a judgement,
+  and shaky until there's enough history).
 
-### Half A — the durable "You" (changes slowly, outlives every job)
+**What this means:** the plain, checkable reasons can drive a confident red and are the
+safest to build first. The judgement calls show up as amber with "here's why, you decide,"
+and earn trust over time rather than assuming it. This lines up with the day-one problem in
+§8.
 
-The single source of truth. Roles churn; this accumulates.
+### The smallest record for a day-one signal
 
-- **Eligibility facts** — location/SEQ, working rights/visa/citizenship, security clearance (Baseline/NV1/NV2), **plus obtainability** (am I a citizen / willing to be vetted, so I *could* get cleared?), professional registrations, notice period/availability, PAYG vs ABN setup. These are the first gate — but **not purely binary** (see the three-state rule below). A role requiring a clearance you can *obtain* is not a reject.
-- **Engagement preferences** — perm vs contract, rate floor, locations/remote, industries, role types, deal-breakers. Defines "does this even fit my criteria."
-- **Evidence atoms** — *the single most important modelling decision.* Not a master-resume blob, but granular, reusable, tagged achievements ("led in-vehicle telematics rollout across X vehicles, delivered Y"), tagged by skill/capability/domain/seniority. A suitability statement becomes *select the right atoms + frame them against the JD.* **Crucially, the user does not enter atoms by hand — nobody thinks that way.** The system *extracts and remembers* them from uploaded CVs, tailored JDs, and accepted/rejected iterations. This is what makes cycle 400 cheap.
-- **Skills & capabilities (normalised)** — so roles can be matched to you, ideally aligned to how government describes capabilities.
+Enough to check the trusted rules and rebuild context later:
 
-### Half B — the "Role" lifecycle record (one per opportunity, churns constantly)
+- **Reference number** (or the fallback: title plus client plus pay plus ad wording). Powers
+  "have I seen this?"
+- **Pay** (and whether it's PAYG or ABN). Powers "below my minimum?"
+- **Title, client, source, closing date.** Context, and the "which job was this?" fix.
+- **The ad text** (captured, not typed). Used later for matching and writing, but not needed
+  for the day-one signal.
 
-The tracker's core unit.
+Everything past this is a bonus. The signal works from the reference number, the pay and
+your setup, all of which the app can capture with almost no typing.
 
-- **Primary key = reference number.** `1651209` collapses the same RoadTek role — appearing via Hays *and* Peoplebank *and* SmartJobs — into **one** record. Without this the tracker is noise and double-submission risk is invisible. *(Fallback dedupe for LinkedIn / private roles with no ref number: title + client + rate + JD similarity. Don't over-fit the spine to government.)*
-- **Role identity** — ref, title, client, source(s), JD text, rate, duration, location, closing date, requirements.
-- **Agency touches (many per role)** — which agent, when, how, what they asked for, and **who holds Authority to Represent** for this ref.
-- **Your actions** — applied where/when, which pack versions produced and sent, forms signed.
-- **Responses & outcomes** — replied / ghosted / shortlisted / interview / offer / rejection, each timestamped.
-- **Reflections** — agent quality, interview notes, "didn't like this person," "what I'd do better." **The crown jewel** — recorded nowhere else on earth, un-scrapeable, and what makes the system genuinely *know* you. **Private forever** (D9); captured multi-modally and triggered off the interview event (see §7b).
-- **Interview events** — time, who, where/how, promised next steps. Sourced from **calendar-invite ingestion** (primary) or manual entry, and the trigger for reflection capture (D10, §7b).
-- **The score + its reasons at decision time** — so we can later check whether the score was right, and learn.
+### First user's details, and a correction on who we serve
 
-### The rule tying both halves together: timeline, not status
+Facts from the first real user (the founder):
 
-Do **not** model a role as `status = rejected`. Model it as an **append-only event log**: applied Tuesday → agent emailed Thursday → sent pack Friday → silence → rejected three weeks later. Because:
+- **No clearance held right now,** but whether they could get one is a setting (citizenship,
+  willingness to be vetted). Jobs needing a clearance from day one are a no; jobs saying
+  "ability to obtain" stay in play if they're eligible and willing. **Correcting an earlier
+  over-narrowing:** the pool is not just state government and private work. It includes
+  federal and sponsored jobs where the clearance can be obtained. The only automatic no is
+  the third case above. (Where the founder isn't eligible or willing, state government and
+  private Brisbane work is the fallback.)
+- **Wants to type as little as possible,** which reinforces D6.
 
-1. It reconstructs context when an agent surfaces weeks later (the "which role was this again?" problem).
-2. The *sequence and timing* is the raw material for learning what a ghost role's lifecycle looks like.
+(Personal facts like the founder's own minimum pay and locations are captured by setup when
+they use it. They're settings, not things this document needs to pin down. We design the
+questions, not the answers.)
 
-### Two capture modes, everywhere
+## 7b. Capturing reflections, and treating the interview as a real event
 
-- **Auto** — populated from the user's own actions (generated a pack, clicked apply).
-- **Manual overlay** — the things the system can't see: an agent's phone call, interview feedback, reflections. This is the **highest-value data and must be frictionless to add** (e.g. a voice note after an interview).
+Your private notes are the most valuable thing the app holds, because they're written down
+nowhere else. This section is about capturing them without it becoming a chore, and it
+turned up a new requirement.
 
-## 7. The derived layer — this *is* "item 2"
+### The new requirement: the app has to know an interview happened
 
-Nothing here is stored; it is all computed from A × B × history.
+You can't be prompted to reflect unless the app knows an interview took place. So the
+interview is a proper event in the app, and its timing has to get in somehow:
 
-**Fit** (cheap, works day one, needs only *your* data): eligibility hard-filters → skill/capability overlap → seniority → rate acceptable → location. Fails fast on hard filters.
+- **Main way: the calendar invite.** When an interview is booked it usually turns up as a
+  calendar invite, so reading calendar invites is a real way things get captured, not a
+  nice-to-have. It fills in the interview (time, who, where or how) with almost no typing.
+- **Backup: you enter it** by hand when there's no invite.
 
-**Winnability** (the valuable part, learned from Half B accumulating over time):
+This also fills in the job record: who you're meeting, when, and what was promised next.
 
-- **Duplicate?** — have I already seen/applied to this? (ref-number dedupe)
-- **Ghost / compliance smell:**
-  - *Visible to you alone, if tracked:* same ref/JD reappearing every few weeks; rolling/extending closing dates; the same role sprayed via 5 agencies at once; an agency that always asks for your pack then ghosts (candidate-database building, not a live vacancy).
-  - *Only visible with accumulated data:* this agency/client/role-type has a submission→interview rate near zero — a statistical black hole invisible from a single posting.
-- **Agency conversion history** — does *this* agent ever actually progress me? (straight from my outcome log)
-- **Rate** vs my floor and vs market.
-- **Staleness / competition** — how long open.
+### The prompt: offer it straight away, but always let you skip
 
-**Effort-vs-reward** — given predicted winnability and whether I can reuse atoms or must write fresh, is it worth my energy? This is where the product is brave enough to say *"apply to none of these today."*
+Once the app knows the interview has finished, it **offers** you the chance to jot a
+reflection right away, but never traps you. The prompt can always be skipped, delayed or
+paused. It's an invitation in a raw moment, not a demand. (When the app doesn't know the
+timing, you can still add a reflection anytime.)
 
-## 7a. The minimum role record & the day-one traffic light (resolves Q6)
+### Capture it whatever way suits the moment
 
-Because we build the spine first (D3) with extraction-first capture (D6) and a traffic-light surface (D1), the question is: **what is the smallest role record that is cheap to capture yet already powers a useful red/amber/green on day one?**
+No single way wins, so support all of them and let you pick by mood:
 
-### The red rules are personal, set at onboarding
+- **A voice note** the app writes up for you. Ramble for 30 seconds while it's fresh. Least
+  effort.
+- **A couple of quick taps:** mood, would-I-take-it, any red flags.
+- **Typing it out,** when you want control.
+- **A few short questions** to guide you, when you want that.
 
-The four hard filters (D5) are **not hardcoded** — they are the user's own criteria, **selected during onboarding and editable anytime.** Each user's traffic light is calibrated to *their* floor, *their* eligibility, *their* locations. This is what lets one consistent surface adapt to every individual (the long-term platform promise, delivered cheaply from the start).
+### What a reflection captures (two very different kinds)
 
-Onboarding captures, once, the Half-A facts that drive the day-one light — **all four categories below, in under 2 minutes:**
+All four are worth capturing, but they split into two kinds with different rules:
 
-- **Rate floor** — on both bases (PAYG+super *and* ABN+GST).
-- **Locations & onsite tolerance** — where I'll work, how many onsite days I'll accept.
-- **Role types & seniority** — the titles/levels I actually want, so obvious mismatches drop out.
-- **Hard no's / deal-breakers** — named clients, agencies, industries, or arrangements I refuse.
-- **Eligibility & obtainability** — what I hold, and whether I can/will obtain clearances (the three-state rule).
-
-**The 2-minute target is a constraint on *how*, not *whether*.** All five are captured, but via **lightweight inputs** (ranges, chips, toggles — not free-text forms), with **import-assist** (infer from an uploaded CV / pasted LinkedIn, confirm only the gaps) and **progressive depth** (ask the essentials now; drip-feed refinements over the first few roles when they're relevant). Depth without a chore.
-
-### Eligibility is three states, not two (correction)
-
-A clearance/registration requirement is **not** "hold it or you're out." The JD language matters, and there are three states:
-
-1. **Hold it** — the role wants a *current* clearance you already have → fine.
-2. **Can obtain it** — the role says "ability to obtain" / "eligible for" a clearance, and you're a citizen willing to be vetted (many roles sponsor this) → **not a red; this is green/amber, keep it in play.**
-3. **Can't meet it** — the role needs a clearance held *day one* that you don't have, or requires citizenship/working rights you can't satisfy → **red.**
-
-**Only state 3 is an instant reject.** Conflating states 2 and 3 wrongly bins winnable federal/sponsored roles. So the extraction has to read *how* the requirement is phrased ("current NV1" vs "ability to obtain NV1"), and onboarding captures the user's **obtainability** (eligible/willing to be vetted?) as a field — not just what they *hold*. This is a system field, captured once; the platform never needs to interrogate the person beyond it.
-
-**Ambiguous requirement → amber, never a silent red.** When extraction can't tell "must hold" from "can obtain," the light shows **amber with a "clearance requirement unclear — verify"** flag. A winnable role is never silently binned on a guess.
-
-### Trust tiers — not all reasons are trusted equally
-
-A crucial nuance from the founder: a reason being a *deal-breaker* is **not** the same as *trusting the system's call on it*. The founder marked all four as deal-breakers, but would only skip *without second-guessing* on the **objective, checkable** ones.
-
-- **Tier 1 — auto-trust (may firmly red or even silently filter):** *rate below floor*, *duplicate / already-seen*. Objective, verifiable, no judgement required.
-- **Tier 2 — show but let the user verify / override (never silent-filter):** *eligibility mismatch* (users trust their own read on eligibility), *agency track record* (inferred, cold-start, small sample — low trust until proven).
-
-**Design implication:** Tier 1 reasons can drive confident reds and are the safest thing to build first. Tier 2 reasons appear as context/amber with a "here's why, you decide" framing — earning trust over time rather than assuming it. This maps directly onto the cold-start truth in §8.
-
-### Minimum role record for a day-one light
-
-Enough to evaluate the Tier-1 rules and reconstruct context later:
-
-- **Reference number** (or fallback key: title + client + rate + JD similarity) — powers *duplicate* detection.
-- **Rate** (and PAYG/ABN basis) — powers *rate below floor*.
-- **Title, client, source, closing date** — context + the "which role was this again?" fix.
-- **JD text** (captured, not hand-typed) — feeds later fit/tailoring; not required for the day-one light.
-
-Everything beyond this is enrichment. The light works from ref + rate + the user's onboarding criteria — all of which extraction-first capture can populate with almost no typing.
-
-### Founder profile (test user #0) — and a wedge refinement
-
-Seeded facts from the founder, who is the first real user:
-
-- **Clearance: none currently held — but obtainability TBD (citizenship / willingness to be vetted).** → Roles requiring a clearance *held day one* are red; roles saying *"ability to obtain"* stay in play if the founder is eligible and willing. **Correction to the earlier over-narrowing:** the pool is **not** just state-gov + private — it includes federal/sponsored roles where clearance is obtainable. The true auto-red is only state 3 above. (Where the founder isn't eligible/willing to obtain, the state-gov + private SEQ pool is the fallback.)
-- **Capture tolerance: almost nothing typed** — reinforces D6.
-
-*(Personal facts like the founder's own rate floor, clearance obtainability, and locations are **captured by onboarding at use time** — they're system fields, not things this document needs to pin down. We design the fields, not the founder's answers.)*
-
-## 7b. Reflection capture & the interview as a first-class event
-
-Reflections are the crown-jewel data (§6, Half B) — the candid, subjective residue nothing else on earth records. This section defines how it gets captured without becoming a chore, and it surfaced a **new requirement**.
-
-### The new requirement: the interview must be a known event
-
-You can't prompt for a reflection unless you know an interview *happened*. So the **interview is a first-class lifecycle event**, and its timing has to come into the system:
-
-- **Primary source: the calendar invite.** When an interview is booked, it usually arrives as a calendar invite — so **calendar ingestion is a capture source**, not a nice-to-have. It seeds the interview event (time, who, where/how) with near-zero typing, consistent with the extraction-first principle (D6).
-- **Fallback: manual entry** of the interview date/time, for when no invite exists.
-
-This also enriches the role record: who I'm meeting, when, and the promised next steps.
-
-### The prompt: offer immediately, but always dismissible
-
-When the interview's end time is known, **offer the reflection right away** — but never trap the user. The prompt must support **skip / snooze / pause / reschedule**. It's an invitation in a raw emotional moment, not a demand. (When timing *isn't* known, reflection is still available manually anytime.)
-
-### Capture is multi-modal — the user picks in the moment
-
-No single input wins; support **all of them** and let the user choose by mood and situation:
-
-- **Voice note, auto-transcribed** — ramble for 30 seconds while wired or deflated; lowest friction.
-- **Quick taps** — mood, would-I-take-it, red-flag y/n.
-- **Free text** — when they want control.
-- **A few prompted questions** — light guidance when they want it.
-
-### What a reflection captures (two classes of data)
-
-All four dimensions earn their place — but they split into two classes with very different rules:
-
-| Dimension | Class |
+| What you capture | Kind |
 |---|---|
-| **How I performed** — what landed, what I fumbled, what I'd say better | Subjective / private |
-| **Do I even want it?** — gut feel on taking the role | Subjective / private |
-| **Red flags & people** — "didn't like this person," bad vibe, culture warnings | Subjective / private |
-| **Process & logistics** — who I met, next steps, timelines, what they asked | Factual / context |
+| **How I did:** what landed, what I fumbled, what I'd say better | Private |
+| **Do I even want it:** gut feel on taking the role | Private |
+| **Red flags and people:** "didn't like this person," bad vibe, warning signs | Private |
+| **Facts and next steps:** who I met, next steps, timelines, what they asked | Factual |
 
-### The privacy line — ironclad, and it has a design consequence
+### The privacy line: absolute, and it shapes the design
 
-**Raw reflections are private forever (D9).** Never shown to agents or employers, never shared, never surfaced anywhere the user didn't put them. **Candour is the whole value, and candour depends on this being absolute.**
+**Your private notes are private forever (D9).** Never shown to agencies or employers, never
+shared, never surfaced anywhere you didn't put them. The honesty is the whole value, and
+honesty only happens if you know it never leaves you.
 
-This draws a hard boundary that reconciles with the scoring model:
+This draws a hard line that fits with the scoring:
 
-- **Factual outcome/event data** (applied, ghosted, progressed, interviewed, rejected) *can* feed winnability scoring — and, later, opt-in anonymised aggregates. This is behaviour, not confession.
-- **Raw private reflections** ("this agency's people were useless") **never** feed cross-user signals or leave the user.
+- **What actually happened** (applied, went quiet, moved forward, interviewed, rejected) can
+  feed the "is it worth applying?" scoring, and later, with your permission, anonymous
+  patterns across users. This is behaviour, not private opinion.
+- **Your private notes** ("this agency's people were useless") never feed anything shared
+  and never leave you.
 
-So when §7/§8 talk about "agency track record," that signal is built from the **factual outcome log**, *not* from private candid text. Two data classes, two rulebooks.
+So when the app talks about an "agency's track record," that comes from **what happened**,
+not from your private notes. Two kinds of information, two sets of rules.
 
-## 7c. Stateful tailoring — where the moat actually lives
+## 7c. Writing your applications: why ChatGPT can't just do this
 
-The tailoring loop is not "another CV optimiser" — it's the mechanism that builds and spends the moat (R3). Three things, in dependency order:
+The writing part is not "another CV tidier." It's how the app builds up, and then spends,
+the thing that makes it hard to copy. Three points, in order:
 
-### The moat is atoms + voice, not stored CVs
+### What's hard to copy is your achievements plus your writing style, not a stored CV
 
-- **What it is NOT:** storing your CV. That's trivially copyable — a competitor's user just pastes theirs into a cold model.
-- **Moat #1 — tagged evidence atoms.** Hundreds of your accomplishments, decomposed and tagged by capability, **built passively** (from uploaded CVs, past suitability statements, and every tailoring session) — never hand-entered. A cold prompt only gets the 2-page CV you pasted; the app reaches for the *right buried achievement* for *this* JD.
-- **Moat #2 — learned voice.** Which phrasings and framings you accept vs reject, learned across many statements, so drafts already sound like you instead of generic AI-slop you beat into shape.
-- **Moat #3 — outcome-weighting** (which statements got interviews) is a **slow-burn bonus, not a launch claim** — the feedback signal is sparse, delayed, and confounded. Stake the moat on #1 + #2; let #3 accrue.
+- **What it is NOT:** just storing your CV. Anyone can paste their CV into ChatGPT, so that
+  alone is no advantage.
+- **First: your achievements, in small pieces.** Hundreds of your accomplishments, tagged by
+  skill, collected automatically from CVs, past statements and your edits. Never typed in by
+  hand. A cold ChatGPT chat only has the two-page CV you pasted. The app can reach for the
+  *right buried achievement* for *this* job.
+- **Second: your writing style.** Which wordings you keep and which you change, learned over
+  many statements, so drafts already sound like you instead of generic AI text you have to
+  fix.
+- **Third: what actually wins** (which statements led to interviews) is a **slow-burn bonus,
+  not a day-one promise.** That feedback is thin, slow and hard to read cleanly. So we rest
+  the case on the first two, and let the third build up.
 
-### Voice is captured implicitly — tailoring must be in-app
+### Your writing style is learned quietly, so the writing must happen in the app
 
-Moat #2 only exists if the system **watches you tailor**. In your current ChatGPT workflow every accept/reject signal is thrown away. So:
+The app can only learn your style if it **watches you write.** In your current ChatGPT
+habit, every keep-this / change-that signal is thrown away. So:
 
-- **Tailoring happens in-app — non-negotiable.** External ChatGPT loses the signal and moat #2 never forms.
-- **Captured implicitly, never by rating drafts.** The statement you finally send, and the edits you made to get there, *are* the signal — kept sentences are positives, rewritten ones negatives. Same passive-capture principle as everywhere else.
-- **Human-in-the-loop, two-way** — the AI drafts and iterates *with* you; it never fires off a statement unseen.
+- **Writing happens in the app.** This is non-negotiable. In ChatGPT the signal is lost and
+  the app never learns your style.
+- **Learned quietly, never by asking you to rate drafts.** The version you finally send, and
+  the edits you made getting there, are the signal. Kept sentences are a yes, rewritten ones
+  a no. Same "capture it automatically" idea as everywhere else.
+- **You and the app together.** The app drafts and edits *with* you. It never sends anything
+  you haven't seen.
 
-### The cold-start bootstrap — atoms earn the switch, voice compounds it
+### The day-one problem, and how we get past it
 
-The chicken-and-egg: it needs in-app use to learn your voice, but needs a learned voice to beat ChatGPT and earn the use. Bridged by **atoms, not voice**:
+The chicken-and-egg: the app needs you writing in it to learn your style, but it needs to
+already sound like you to be worth switching from ChatGPT. We get past it with **your
+achievements, not your style:**
 
-- Day one the app can't sound like you yet — but it starts from your **pre-loaded atoms + the JD already in-system**, so you skip re-pasting and example-hunting. That alone makes it faster than a cold prompt *on the first use*.
-- That day-one speed earns the switch; voice then quietly compounds over the following weeks.
-- **The bar:** in-app tailoring must be *obviously* faster than ChatGPT from the very first use, or the habit wins and the voice signal is never captured. This is a hard product requirement, not an aspiration.
+- On day one the app can't sound like you yet. But it starts from your ready-collected
+  achievements and the job details it already holds, so you skip re-pasting your CV and
+  hunting for examples. That alone makes it faster than starting cold, on the very first go.
+- That first-day speed earns the switch. Your style then builds up quietly over the following
+  weeks.
+- **The bar:** writing in the app has to be *clearly* faster than ChatGPT from the very first
+  use, or the old habit wins and the app never learns your style. This is a hard requirement,
+  not a hope.
 
-## 7d. The pack-assembly moment (the two-stage funnel)
+## 7d. The moment the agent asks for your pack
 
-This is the **highest-value intervention** — the moment the agent bites and asks for the pack (the RoadTek email), where the founder currently burns hours and lost the will to continue.
+This is where the most time is currently wasted, and so where the app helps most: the moment
+an agent gets interested and asks for the pack (the RoadTek email), where you currently burn
+hours and lost the will to keep going.
 
-### Three ways to assemble a pack (D15)
+### Three ways to build a pack (D15)
 
-- **Forward-email trigger (primary):** forward the agent's request; the app **matches it to the existing role record** (ref number, else fuzzy key: client + title + rate), **parses what's asked** (CV / suitability / forms) into a checklist, and **assembles** — the in-app tailoring loop (§7c) drafts the suitability from atoms + the JD it already holds; the CV renders in the requested format.
-- **Pre-build at apply time:** optionally prepare a ready-to-go pack the moment you apply, so it's already waiting if the agent bites.
-- **Manual "make a pack":** trigger assembly yourself from the tracker anytime.
+- **Forward the agent's email (main way):** the app matches it to the job it already knows
+  (by reference number, or by client plus title plus pay), works out what's being asked for
+  (CV, suitability statement, forms) into a checklist, and puts it together. The writing part
+  (§7c) drafts the suitability statement from your achievements and the job it already holds,
+  and the CV comes out in the format asked for.
+- **Prepared in advance:** optionally have a ready-to-go pack the moment you apply, so it's
+  waiting if the agent bites.
+- **On demand:** build one yourself from the tracker anytime.
 
-**Matching, never guessing:** ref number matches confidently; when the fuzzy key is uncertain, **ask the user to confirm the match** rather than silently attach to the wrong role (consistent with principle #9).
+**It asks rather than guessing:** a reference number matches confidently. When the fallback
+match is uncertain, the app **asks you to confirm the job** rather than quietly attaching it
+to the wrong one (in line with principle 9).
 
-### Forms are track-only on day one (D16)
+### Government forms: just tracked for now (D16)
 
-The Consent Form + Authority to Represent live in external tools (Dochub). Day one we **do not fill or sign them** — the user handles that. But we **still track the ATR fact**: *which agency holds Authority to Represent for which reference number.* That log is what powers **double-submission protection** (the "already represented for this ref" red). Tracking the fact ≠ owning the form; owning the form flow is deferred.
+The Consent Form and Authority to Represent live in Dochub. For now the app does **not** fill
+them in or sign them. You do that. But it **does** record which agency is representing you for
+which job, which is what stops you being submitted twice by mistake. Recording that fact is
+not the same as owning the forms, and owning the forms is left for later.
 
-## 8. The cold-start sequencing truth
+## 8. Why the app starts useful and gets smarter (not clever on day one)
 
-The product does **not** launch omniscient:
+The app does not launch knowing everything:
 
-- **Fit scoring works day one** — it needs only the user's own data.
-- **Stateful tailoring** and the **tracker** (ending "which role was this again?") deliver value immediately.
-- **Winnability / ghost detection has a cold start** — weak with one user and no history; it *grows* as the user's own tracker fills, then *compounds* as more users join (a genuine data network effect no lone competitor can hand a new user on day one).
+- **"Does it match me" works from day one.** It only needs your own information.
+- **The writing help and the tracker** (ending "which job was this again?") are useful
+  straight away.
+- **"Is it worth applying?" starts weak** with one user and no history. It **grows** as your
+  own tracker fills up, then **grows further** as more people join and shared patterns emerge,
+  something a brand-new competitor can't hand a new user on day one.
 
-This is a feature, not a flaw. Early users who let the system accumulate their history get something late competitors can't replicate.
+This is a strength, not a weakness. Early users who let the app build up their history get
+something later rivals can't copy.
 
-## 9. Open questions (actively unresolved)
+## 9. Still open (not yet settled)
 
-1. ~~**The decision surface**~~ — **Resolved (D1):** traffic light + one plain-English reason. Still open *underneath*: exactly which reasons we can generate on day one vs later.
-2. **Who pays, and when** — **Held open (D4).** Candidate subscription (aligned, intermittent willingness-to-pay) vs hiring-side money later (bigger, but tension with "we work only for you"). Design so neither door is foreclosed.
-3. ~~**Unified search feasibility**~~ — **Direction set (D2):** manual paste/forward is the reliable floor; extension + best-effort aggregation layered on. Still open: how good the paste/forward parsing has to be to feel effortless.
-4. ~~**Reflection capture UX**~~ — **Resolved (§7b, D9/D10):** multi-modal capture, offered off a known interview event (calendar-ingested), always skippable, private forever. Still open underneath: **calendar-ingestion mechanics** — which calendars, how invites are matched to the right role record, and how to detect an interview vs any other meeting.
-5. **Motivation & dignity as design requirements** — the product does psychological work, not just functional. How does "this took 4 minutes and is building into something" replace "this took 3 hours and vanished"?
-6. ~~**The spine's decision surface**~~ — **Resolved (§7a):** minimum record = ref + rate + title/client/source/closing (+ JD text captured); red rules are personal and set at onboarding; reasons have trust tiers. Still open underneath: how good extraction has to be to feel effortless (ties to Q3-underneath).
-7. ~~**Rate floor & onboarding set**~~ — **Resolved (D7, §7a):** under 2 minutes; captures rate floor (PAYG & ABN), locations & onsite, role types & seniority, hard-no's, eligibility+obtainability; lightweight inputs + import-assist + progressive depth. Still open underneath: the exact input widgets that make five categories feel like two minutes.
+1. **How the app tells you to apply:** settled as red/amber/green plus one reason (D1). Still
+   open underneath: exactly which reasons we can produce on day one versus later.
+2. **How it makes money:** left open (D4). Charging job seekers (honest, but they pay only
+   while hunting) versus charging employers/recruiters later (more money, but pulls against
+   "we work only for you"). Design so neither door is shut.
+3. **Pulling in jobs automatically:** direction set (D2). Pasting and forwarding is the
+   reliable base; a browser helper and automatic pulling-in come on top. Still open: how good
+   the pasting/forwarding reading has to be to feel effortless.
+4. **Capturing reflections:** settled (§7b, D9/D10). Captured however suits you, prompted off
+   a known interview, always skippable, private forever. Still open underneath: the calendar
+   details (which calendars, matching an invite to the right job, telling an interview apart
+   from any other meeting).
+5. **Motivation and dignity as design goals:** the app does emotional work, not just practical
+   work. How do we make it feel like "that took 4 minutes and is building into something"
+   instead of "that took 3 hours and vanished"?
+6. **The smallest job record:** settled (§7a). Reference number, pay, title, client, source,
+   closing date, plus the ad text captured. The red rules are yours, set at setup, and reasons
+   are trusted differently. Still open underneath: how good the automatic reading has to be.
+7. **Setup:** settled (D7, §7a). Under two minutes, five things, quick inputs, fill-in from
+   your CV, ask the rest gradually. Still open underneath: the exact tap-and-slider design that
+   makes five things feel like two minutes.
 
-## 10. Explicitly out of scope (for now)
+## 10. Deliberately not doing (for now)
 
-- Any technology, architecture, or implementation decisions.
-- A standalone "optimise my CV / LinkedIn" tool — that already exists and is commoditising; we build the *end-to-end thread*, not another point solution.
-- Horizontal launch across all user types simultaneously — deferred until the contractor wedge is won.
-- Employer/recruiter-side product — candidate-first; revisit only with eyes open on the conflict it introduces.
+- Any technology or design decisions yet.
+- A standalone "tidy up my CV / LinkedIn" tool. That already exists and is becoming cheap. We
+  build the joined-up process, not another single-purpose tool.
+- Launching for everyone at once. That waits until we've won the contractor group.
+- An employer or recruiter product. We're on the candidate's side first, and would only revisit
+  this with eyes open about the conflict it creates.
 
-## 11. Risks & assumptions we're betting on
+## 11. The big bets we're making
 
-The load-bearing beliefs under the whole product. Each box we design assumes these hold. Being tested through the grilling sessions.
+The beliefs the whole product rests on. Everything we design assumes these hold. We're testing
+them in the grilling sessions.
 
-| # | The bet | Status | How we'll know it's true |
-|---|---------|--------|--------------------------|
-| R1 | **It survives between searches.** A low-frequency tool that only opens during a hunt lets the profile rot and the memory never compounds. | **Addressed (D11/D12).** Positioned episodic + keep-warm: contract-end trigger + observed-rate drip, riding the short contractor cycle rather than fighting frequency. | Users return via the re-activation trigger; the drip earns an open. Still a real risk if neither hook pulls. |
-| R2 | **n = 1 generalises.** Built from the founder's scars — but is the burnout a *market* problem or just a *me* problem? | **Open — highest unaddressed risk.** | A handful of other SEQ contractors recognise the loop and the demoralisation without prompting. (A validation activity, not a design decision.) |
-| R3 | **The statefulness moat is real.** "Accumulating memory makes cycle 400 cheaper and better than a cold prompt." | **Addressed in design (D13/D14, §7c).** Moat staked on atoms + voice; in-app tailoring captures the voice signal; atoms bootstrap the cold start. Validated only by building it. | In-app tailoring is *obviously* faster than a cold ChatGPT prompt from the first use, and drafts sound more like the user over time. |
+| # | The bet | Where it stands | How we'll know it's true |
+|---|---------|-----------------|--------------------------|
+| R1 | **People still use it between job hunts.** A tool only opened while hunting lets your profile go stale and never builds up. | **Addressed (D11/D12).** Positioned as a job-hunt tool with two small reasons to return (a contract-end wake-up and a quiet pay signal), riding the short contractor cycle. | People come back via the wake-up, and the pay signal earns an open. Still a real risk if neither pulls. |
+| R2 | **This isn't just my problem.** Built from one person's experience. Is the burnout a whole-market problem or just a me problem? | **Open. The biggest thing we haven't tested.** | A handful of other Brisbane contractors recognise the loop and the burnout without being led to it. This is something to go and check, not a design choice. |
+| R3 | **The memory really does beat starting cold.** "The app gets cheaper and better than a fresh ChatGPT chat as it learns you." | **Addressed in the design (D13/D14, §7c).** Rests on your achievements plus your writing style; writing in the app captures the style; achievements carry the first day. Only proven by building it. | Writing in the app is clearly faster than a cold ChatGPT chat from the first use, and drafts sound more like you over time. |
 
 ---
 
-## Core principles (the test every decision must pass)
+## The principles every decision has to pass
 
-1. Shrink **effort × uncertainty × no-feedback** — the named villain.
-2. **The thread is the product** — continuity and memory, not any single box.
-3. **The moat is accumulating memory**, not generation or search.
-4. **Targeting and quality over volume and speed** — help make better decisions, not submit more applications.
+1. **Cut effort, uncertainty and silence.** These three are what cause the burnout.
+2. **Joining the steps up is the product,** not any single step on its own.
+3. **The hard-to-copy part is the memory that builds up,** not the writing or the search.
+4. **Aim and quality over speed and volume.** Help people make better choices, not fire off
+   more applications.
 5. **Be brave enough to say "don't apply."**
-6. **The user should never re-enter what the system already knows** — capture passively; manual entry only for what can't be seen, and make even that frictionless.
-7. **Win the Australian contractor wedge completely before generalising.**
-8. **Raw reflections are private forever** — the candour is the value, and it only exists if the user knows it never leaves them.
-9. **Never bin a winnable role on a guess** — ambiguity resolves to amber-and-verify, not a silent red.
-10. **No fabricated numbers** — every figure shown (rates, benchmarks) is *observed* from real data; when there isn't enough, say so rather than invent one.
+6. **Never make people re-enter what the app already knows.** Capture it automatically. Only
+   ask for what the app can't see, and make even that effortless.
+7. **Win the Australian contractor group completely before going wider.**
+8. **Private notes are private forever.** The honesty is the value, and it only exists if you
+   know it never leaves you.
+9. **Never reject a winnable job on a guess.** When unsure, show amber and "please check,"
+   not a silent no.
+10. **Never invent a number.** Every figure (pay, benchmarks) comes from real data. When
+    there isn't enough, say so instead of making one up.
