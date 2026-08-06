@@ -20,6 +20,8 @@ Founder decisions made explicitly. These are settled unless revisited here.
 | D6 | **Capture model** | **Extraction-first.** User pastes a link / forwards an email; system extracts title, client, rate, ref, closing date; user only corrects. → *Parsing quality is a first-order requirement, not a nicety.* | 2026-08-06 |
 | D7 | **Onboarding** | **Under 2 minutes**, capturing five things once — rate floor (PAYG & ABN), locations & onsite tolerance, role types & seniority, hard-no's, and eligibility+obtainability — via lightweight inputs, import-assist, and progressive depth. Red rules are user-set here (§7a). | 2026-08-06 |
 | D8 | **Ambiguous clearance** | When "must hold" vs "can obtain" can't be told apart, show **amber + "verify"** — never a silent red. Never bin a winnable role on a guess. | 2026-08-06 |
+| D9 | **Reflections are private forever** | Raw reflections are the user's alone — never shown to agents/employers, never shared, never fed into cross-user signals. Candour depends on this being absolute. Scoring signals (e.g. agency track record) come from the *factual outcome log*, not private text. See §7b. | 2026-08-06 |
+| D10 | **Interview is a first-class event** | Its timing enters the system via **calendar-invite ingestion** (primary) or manual entry (fallback); it drives the reflection prompt, which is offered immediately but is **skippable / snoozable / pausable**. See §7b. | 2026-08-06 |
 
 ---
 
@@ -149,7 +151,8 @@ The tracker's core unit.
 - **Agency touches (many per role)** — which agent, when, how, what they asked for, and **who holds Authority to Represent** for this ref.
 - **Your actions** — applied where/when, which pack versions produced and sent, forms signed.
 - **Responses & outcomes** — replied / ghosted / shortlisted / interview / offer / rejection, each timestamped.
-- **Reflections** — agent quality, interview notes, "didn't like this person," "what I'd do better." **The crown jewel** — recorded nowhere else on earth, un-scrapeable, and what makes the system genuinely *know* you.
+- **Reflections** — agent quality, interview notes, "didn't like this person," "what I'd do better." **The crown jewel** — recorded nowhere else on earth, un-scrapeable, and what makes the system genuinely *know* you. **Private forever** (D9); captured multi-modally and triggered off the interview event (see §7b).
+- **Interview events** — time, who, where/how, promised next steps. Sourced from **calendar-invite ingestion** (primary) or manual entry, and the trigger for reflection capture (D10, §7b).
 - **The score + its reasons at decision time** — so we can later check whether the score was right, and learn.
 
 ### The rule tying both halves together: timeline, not status
@@ -241,6 +244,54 @@ Seeded facts from the founder, who is the first real user:
 
 *(Personal facts like the founder's own rate floor, clearance obtainability, and locations are **captured by onboarding at use time** — they're system fields, not things this document needs to pin down. We design the fields, not the founder's answers.)*
 
+## 7b. Reflection capture & the interview as a first-class event
+
+Reflections are the crown-jewel data (§6, Half B) — the candid, subjective residue nothing else on earth records. This section defines how it gets captured without becoming a chore, and it surfaced a **new requirement**.
+
+### The new requirement: the interview must be a known event
+
+You can't prompt for a reflection unless you know an interview *happened*. So the **interview is a first-class lifecycle event**, and its timing has to come into the system:
+
+- **Primary source: the calendar invite.** When an interview is booked, it usually arrives as a calendar invite — so **calendar ingestion is a capture source**, not a nice-to-have. It seeds the interview event (time, who, where/how) with near-zero typing, consistent with the extraction-first principle (D6).
+- **Fallback: manual entry** of the interview date/time, for when no invite exists.
+
+This also enriches the role record: who I'm meeting, when, and the promised next steps.
+
+### The prompt: offer immediately, but always dismissible
+
+When the interview's end time is known, **offer the reflection right away** — but never trap the user. The prompt must support **skip / snooze / pause / reschedule**. It's an invitation in a raw emotional moment, not a demand. (When timing *isn't* known, reflection is still available manually anytime.)
+
+### Capture is multi-modal — the user picks in the moment
+
+No single input wins; support **all of them** and let the user choose by mood and situation:
+
+- **Voice note, auto-transcribed** — ramble for 30 seconds while wired or deflated; lowest friction.
+- **Quick taps** — mood, would-I-take-it, red-flag y/n.
+- **Free text** — when they want control.
+- **A few prompted questions** — light guidance when they want it.
+
+### What a reflection captures (two classes of data)
+
+All four dimensions earn their place — but they split into two classes with very different rules:
+
+| Dimension | Class | |
+|---|---|---|
+| **How I performed** — what landed, what I fumbled, what I'd say better | Subjective / private | |
+| **Do I even want it?** — gut feel on taking the role | Subjective / private | |
+| **Red flags & people** — "didn't like this person," bad vibe, culture warnings | Subjective / private | |
+| **Process & logistics** — who I met, next steps, timelines, what they asked | Factual / context | |
+
+### The privacy line — ironclad, and it has a design consequence
+
+**Raw reflections are private forever (D9).** Never shown to agents or employers, never shared, never surfaced anywhere the user didn't put them. **Candour is the whole value, and candour depends on this being absolute.**
+
+This draws a hard boundary that reconciles with the scoring model:
+
+- **Factual outcome/event data** (applied, ghosted, progressed, interviewed, rejected) *can* feed winnability scoring — and, later, opt-in anonymised aggregates. This is behaviour, not confession.
+- **Raw private reflections** ("this agency's people were useless") **never** feed cross-user signals or leave the user.
+
+So when §7/§8 talk about "agency track record," that signal is built from the **factual outcome log**, *not* from private candid text. Two data classes, two rulebooks.
+
 ## 8. The cold-start sequencing truth
 
 The product does **not** launch omniscient:
@@ -256,7 +307,7 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 1. ~~**The decision surface**~~ — **Resolved (D1):** traffic light + one plain-English reason. Still open *underneath*: exactly which reasons we can generate on day one vs later.
 2. **Who pays, and when** — **Held open (D4).** Candidate subscription (aligned, intermittent willingness-to-pay) vs hiring-side money later (bigger, but tension with "we work only for you"). Design so neither door is foreclosed.
 3. ~~**Unified search feasibility**~~ — **Direction set (D2):** manual paste/forward is the reliable floor; extension + best-effort aggregation layered on. Still open: how good the paste/forward parsing has to be to feel effortless.
-4. **Reflection capture UX** — how to make the crown-jewel subjective data effortless to record in the emotional moment right after an interview.
+4. ~~**Reflection capture UX**~~ — **Resolved (§7b, D9/D10):** multi-modal capture, offered off a known interview event (calendar-ingested), always skippable, private forever. Still open underneath: **calendar-ingestion mechanics** — which calendars, how invites are matched to the right role record, and how to detect an interview vs any other meeting.
 5. **Motivation & dignity as design requirements** — the product does psychological work, not just functional. How does "this took 4 minutes and is building into something" replace "this took 3 hours and vanished"?
 6. ~~**The spine's decision surface**~~ — **Resolved (§7a):** minimum record = ref + rate + title/client/source/closing (+ JD text captured); red rules are personal and set at onboarding; reasons have trust tiers. Still open underneath: how good extraction has to be to feel effortless (ties to Q3-underneath).
 7. ~~**Rate floor & onboarding set**~~ — **Resolved (D7, §7a):** under 2 minutes; captures rate floor (PAYG & ABN), locations & onsite, role types & seniority, hard-no's, eligibility+obtainability; lightweight inputs + import-assist + progressive depth. Still open underneath: the exact input widgets that make five categories feel like two minutes.
@@ -279,3 +330,5 @@ This is a feature, not a flaw. Early users who let the system accumulate their h
 5. **Be brave enough to say "don't apply."**
 6. **The user should never re-enter what the system already knows** — capture passively; manual entry only for what can't be seen, and make even that frictionless.
 7. **Win the Australian contractor wedge completely before generalising.**
+8. **Raw reflections are private forever** — the candour is the value, and it only exists if the user knows it never leaves them.
+9. **Never bin a winnable role on a guess** — ambiguity resolves to amber-and-verify, not a silent red.
