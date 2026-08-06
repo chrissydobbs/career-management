@@ -37,6 +37,7 @@ The decisions we have made and agreed. Settled unless we revisit them here.
 | D16 | Government forms: just track them for now | The app does **not** fill in or sign the Consent Form or Authority to Represent (those live in Dochub). You handle those. It **does** record which agency is representing you for which job, so you don't get submitted twice by mistake. See §7d. |
 | D17 | How we check other people want this | **Build for yourself first, no upfront interviews.** The founder is confident from lived experience, so the first proof is real results on the founder's own applications. The network of contractors already known is kept as a safety net to sanity-check anytime (no cold outreach). See R2 in §11. |
 | D18 | What we build first (the first slice) | **"Find jobs and tell me if they're worth applying for."** One thin slice end to end: quick setup, capture a job (paste or forward, not auto-search yet), and show the red/amber/green signal with a reason. The writing help is the **second** slice. See §12. |
+| D19 | How the app protects motivation | **Make the growing asset visible**, as one connected chain, not separate tricks: your profile and reusable pieces visibly grow, that produces better outcomes (replies, interviews), and that saves you time. Show the whole chain (grew, so this happened, so you saved this), because effort vanishing into silence is what caused the burnout. |
 
 ---
 
@@ -567,9 +568,11 @@ something later rivals can't copy.
    a known interview, always skippable, private forever. Still open underneath: the calendar
    details (which calendars, matching an invite to the right job, telling an interview apart
    from any other meeting).
-5. **Motivation and dignity as design goals:** the app does emotional work, not just practical
-   work. How do we make it feel like "that took 4 minutes and is building into something"
-   instead of "that took 3 hours and vanished"?
+5. ~~**Motivation and dignity as design goals**~~ **Resolved (D19).** Make the growing asset
+   visible as one connected chain: your profile grows, that produces better outcomes, that
+   saves you time. Show the whole chain, because effort vanishing into silence is what caused
+   the burnout. Still open underneath: exactly how this shows up on screen (a job for the
+   prototype).
 6. **The smallest job record:** settled (§7a). Reference number, pay, title, client, source,
    closing date, plus the ad text captured. The red rules are yours, set at setup, and reasons
    are trusted differently. Still open underneath: how good the automatic reading has to be.
@@ -643,3 +646,5 @@ on.
    not a silent no.
 10. **Never invent a number.** Every figure (pay, benchmarks) comes from real data. When
     there isn't enough, say so instead of making one up.
+11. **Make effort visibly build.** Show the work accumulating into a growing asset that
+    produces outcomes and saves time. Effort must never feel like it vanished into silence.
