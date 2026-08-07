@@ -34,33 +34,30 @@ nav.top a:hover{color:var(--ink)}
 .back{display:inline-block; color:var(--teal); text-decoration:none; font-weight:600; font-size:13px; margin-bottom:18px}
 .back:hover{text-decoration:underline}
 
-/* masthead + compact meta strip */
 .jobhead h1{font-weight:700; font-size:30px; line-height:1.12; letter-spacing:-.02em; margin:8px 0 6px}
 .jobhead .who{color:var(--slate); font-size:14px}
 .jobhead .who b{color:var(--ink); font-weight:600}
 .meta{display:flex; flex-wrap:wrap; gap:8px 18px; margin:12px 0 4px; color:var(--slate); font-size:13px}
 .meta span b{color:var(--muted); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; margin-right:6px}
 
-/* two column: verdict main + lights */
-.verdict{position:relative; background:var(--paper); border:1px solid var(--rule); border-left:6px solid var(--green);
-  border-radius:var(--r-tile); padding:18px 22px; margin:22px 0 8px; display:flex; gap:20px; align-items:center; flex-wrap:wrap}
-.verdict .v-main{flex:1; min-width:240px}
-.verdict .v-big{font-weight:700; font-size:28px; letter-spacing:-.02em; color:var(--green); line-height:1}
-.verdict .v-reason{color:var(--slate); font-size:14px; margin-top:7px; max-width:56ch}
-.lights{display:flex; gap:9px; align-items:center}
-.light{width:14px; height:14px; border-radius:50%; background:var(--rule)}
-.light.on.green{background:var(--green)}
+/* combined verdict + why, one block */
+.vc{display:grid; grid-template-columns:1.25fr 1fr; background:var(--paper); border:1px solid var(--rule);
+  border-left:6px solid var(--green); border-radius:var(--r-tile); margin:22px 0 8px; overflow:hidden}
+@media(max-width:680px){.vc{grid-template-columns:1fr}}
+.vc .left{padding:20px 24px}
+.vc .right{padding:18px 22px; border-left:1px solid var(--rule); background:var(--paper2)}
+@media(max-width:680px){.vc .right{border-left:0; border-top:1px solid var(--rule)}}
+.vc .v-big{font-weight:700; font-size:27px; letter-spacing:-.02em; color:var(--green); line-height:1; margin-top:7px}
+.vc .v-reason{color:var(--slate); font-size:13.5px; margin-top:9px; max-width:44ch}
+.vc .rhead{margin-bottom:11px}
+.vc .rhead .n{color:var(--muted); font-size:11.5px; margin-left:8px}
+.vc .check{display:flex; gap:9px; align-items:baseline; padding:4px 0; font-size:12.5px}
+.vc .check .tick{color:var(--green); font-weight:700; flex:0 0 auto}
+.vc .check .c-name{font-weight:600; width:74px; flex:0 0 auto}
+.vc .check .c-detail{color:var(--slate); flex:1; min-width:0}
 
-/* compact why: one tight line each */
 .sectitle{margin:26px 2px 10px; display:flex; align-items:baseline; gap:10px}
 .sectitle .n{color:var(--muted); font-size:12px; font-weight:500}
-.checks{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); overflow:hidden}
-.check{display:flex; align-items:center; gap:12px; padding:9px 16px; border-bottom:1px solid var(--rule); font-size:13px}
-.check:last-child{border-bottom:0}
-.check .tick{color:var(--green); font-weight:700; flex:0 0 auto}
-.check .c-name{font-weight:600; width:92px; flex:0 0 auto}
-.check .c-detail{color:var(--slate); flex:1; min-width:0}
-.check.flag .tick{color:var(--yellow)} .check.fail .tick{color:var(--pink)}
 
 /* keywords */
 .kw{display:flex; flex-wrap:wrap; gap:8px}
@@ -120,26 +117,21 @@ footer.note{margin-top:30px; color:var(--muted); font-size:12px; text-align:cent
     </div>
   </div>
 
-  <!-- verdict -->
-  <div class="verdict">
-    <div class="v-main">
-      <span class="caps green" style="display:block; margin-bottom:7px">Verdict</span>
+  <!-- verdict + why, combined in one block -->
+  <div class="vc">
+    <div class="left">
+      <span class="caps green">Verdict</span>
       <div class="v-big">Worth applying</div>
       <div class="v-reason">Above your rate floor, the right role in your area, and it needs no security clearance. A clean match.</div>
     </div>
-    <div class="lights" title="green worth it, yellow check, pink skip">
-      <span class="light on green"></span><span class="light"></span><span class="light"></span>
+    <div class="right">
+      <div class="rhead"><span class="caps muted">Why</span><span class="n">5 of 5 pass</span></div>
+      <div class="check"><span class="tick">&#10003;</span><span class="c-name">Rate</span><span class="c-detail">above your floor</span></div>
+      <div class="check"><span class="tick">&#10003;</span><span class="c-name">Role</span><span class="c-detail">matches your targets</span></div>
+      <div class="check"><span class="tick">&#10003;</span><span class="c-name">Location</span><span class="c-detail">Brisbane SEQ</span></div>
+      <div class="check"><span class="tick">&#10003;</span><span class="c-name">Eligibility</span><span class="c-detail">no clearance needed</span></div>
+      <div class="check"><span class="tick">&#10003;</span><span class="c-name">Seen</span><span class="c-detail">not a duplicate</span></div>
     </div>
-  </div>
-
-  <!-- compact why -->
-  <div class="sectitle"><span class="caps muted">Why</span><span class="n">5 of 5 checks pass</span></div>
-  <div class="checks">
-    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Rate</span><span class="c-detail">$100 / $112, above your floor ($95 / $110)</span></div>
-    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Role</span><span class="c-detail">ICT Project Manager matches your target roles</span></div>
-    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Location</span><span class="c-detail">Brisbane SEQ, within your area</span></div>
-    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Eligibility</span><span class="c-detail">No security clearance required</span></div>
-    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Seen before</span><span class="c-detail">First time you have seen this reference</span></div>
   </div>
 
   <!-- keywords -->
