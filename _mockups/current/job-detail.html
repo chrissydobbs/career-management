@@ -23,7 +23,6 @@ body{background:var(--bg); color:var(--ink);
 .caps{font-weight:700; font-size:11px; letter-spacing:.2em; text-transform:uppercase}
 .caps.pink{color:var(--pink)} .caps.teal{color:var(--teal)} .caps.muted{color:var(--muted)} .caps.green{color:var(--green)}
 
-/* shared nav */
 nav.top{background:var(--paper); border-bottom:1px solid var(--rule)}
 nav.top .inner{max-width:1180px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; gap:28px}
 nav.top .wordmark{font-weight:700; font-size:18px; letter-spacing:-.03em; margin-right:6px}
@@ -31,62 +30,67 @@ nav.top a{color:var(--muted); text-decoration:none; font-size:13px; font-weight:
 nav.top a.active{color:var(--ink); border-bottom:2px solid var(--pink)}
 nav.top a:hover{color:var(--ink)}
 
-.wrap{max-width:940px; margin:0 auto; padding:26px 28px 72px}
-.back{display:inline-block; color:var(--teal); text-decoration:none; font-weight:600; font-size:13px; margin-bottom:20px}
+.wrap{max-width:960px; margin:0 auto; padding:26px 28px 72px}
+.back{display:inline-block; color:var(--teal); text-decoration:none; font-weight:600; font-size:13px; margin-bottom:18px}
 .back:hover{text-decoration:underline}
 
-/* job masthead */
-.jobhead{margin-bottom:22px}
-.jobhead h1{font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-.02em; margin:8px 0 6px}
-.jobhead .who{color:var(--slate); font-size:15px}
+/* masthead + compact meta strip */
+.jobhead h1{font-weight:700; font-size:30px; line-height:1.12; letter-spacing:-.02em; margin:8px 0 6px}
+.jobhead .who{color:var(--slate); font-size:14px}
 .jobhead .who b{color:var(--ink); font-weight:600}
+.meta{display:flex; flex-wrap:wrap; gap:8px 18px; margin:12px 0 4px; color:var(--slate); font-size:13px}
+.meta span b{color:var(--muted); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; margin-right:6px}
 
-/* verdict block, 6px accent stripe */
+/* two column: verdict main + lights */
 .verdict{position:relative; background:var(--paper); border:1px solid var(--rule); border-left:6px solid var(--green);
-  border-radius:var(--r-tile); padding:22px 24px; margin-bottom:26px; display:flex; gap:22px; align-items:center; flex-wrap:wrap}
+  border-radius:var(--r-tile); padding:18px 22px; margin:22px 0 8px; display:flex; gap:20px; align-items:center; flex-wrap:wrap}
 .verdict .v-main{flex:1; min-width:240px}
-.verdict .v-big{font-weight:700; font-size:34px; letter-spacing:-.02em; color:var(--green); line-height:1}
-.verdict .v-reason{color:var(--slate); font-size:15px; margin-top:8px; max-width:52ch}
-.lights{display:flex; gap:10px; align-items:center}
-.light{width:16px; height:16px; border-radius:50%; background:var(--rule)}
-.light.on.green{background:var(--green)} .light.on.yellow{background:var(--yellow)} .light.on.pink{background:var(--pink)}
-.lights .lab{font-size:11px; color:var(--muted); margin-left:2px}
+.verdict .v-big{font-weight:700; font-size:28px; letter-spacing:-.02em; color:var(--green); line-height:1}
+.verdict .v-reason{color:var(--slate); font-size:14px; margin-top:7px; max-width:56ch}
+.lights{display:flex; gap:9px; align-items:center}
+.light{width:14px; height:14px; border-radius:50%; background:var(--rule)}
+.light.on.green{background:var(--green)}
 
-/* section label */
-.sectitle{margin:30px 2px 12px}
-
-/* why rows */
+/* compact why: one tight line each */
+.sectitle{margin:26px 2px 10px; display:flex; align-items:baseline; gap:10px}
+.sectitle .n{color:var(--muted); font-size:12px; font-weight:500}
 .checks{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); overflow:hidden}
-.check{display:grid; grid-template-columns:150px 1fr auto; gap:16px; align-items:center; padding:15px 20px; border-bottom:1px solid var(--rule)}
+.check{display:flex; align-items:center; gap:12px; padding:9px 16px; border-bottom:1px solid var(--rule); font-size:13px}
 .check:last-child{border-bottom:0}
-@media(max-width:620px){.check{grid-template-columns:1fr auto; }.check .c-name{grid-column:1/2}}
-.check .c-name{font-weight:600; font-size:13px}
-.check .c-detail{color:var(--slate); font-size:13.5px}
-.tag{justify-self:end; display:inline-block; padding:4px 10px; border-radius:3px; font-weight:700; font-size:10px; letter-spacing:.08em; text-transform:uppercase}
-.tag.pass{background:var(--green); color:#fff}
-.tag.flag{background:var(--yellow); color:#3a2f05}
-.tag.fail{background:var(--pink); color:#fff}
+.check .tick{color:var(--green); font-weight:700; flex:0 0 auto}
+.check .c-name{font-weight:600; width:92px; flex:0 0 auto}
+.check .c-detail{color:var(--slate); flex:1; min-width:0}
+.check.flag .tick{color:var(--yellow)} .check.fail .tick{color:var(--pink)}
 
-/* key-value details table */
-.kv{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); overflow:hidden}
-.kv .row{display:grid; grid-template-columns:170px 1fr; border-bottom:1px solid var(--rule)}
-.kv .row:last-child{border-bottom:0}
-.kv .k{padding:13px 20px; font-weight:700; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); background:var(--paper2)}
-.kv .v{padding:13px 20px; font-size:14px; color:var(--ink)}
-@media(max-width:620px){.kv .row{grid-template-columns:1fr}.kv .k{padding-bottom:2px}}
+/* keywords */
+.kw{display:flex; flex-wrap:wrap; gap:8px}
+.chip{padding:6px 11px; border-radius:var(--r); font-size:13px; font-weight:500; border:1px solid transparent}
+.chip.match{background:var(--teal-l); color:#183a3a; border-color:#9fcccc}
+.chip.match::before{content:"\2713"; color:var(--teal); font-weight:700; margin-right:6px}
+.chip.gap{background:transparent; color:var(--slate); border:1px dashed var(--muted)}
+.legend{display:flex; gap:18px; margin-top:12px; color:var(--muted); font-size:12px; flex-wrap:wrap}
+.legend b{color:var(--slate); font-weight:600}
+.legend .sw{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:middle}
 
-/* needs list */
-.needs{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); padding:8px 4px}
-.need{display:flex; gap:12px; align-items:flex-start; padding:11px 18px}
-.need .box{flex:0 0 auto; width:16px; height:16px; border:1.5px solid var(--muted); border-radius:3px; margin-top:2px}
+/* job description panel */
+.jd{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile)}
+.jd .jd-body{padding:18px 22px; max-height:300px; overflow:auto; font-size:14px; line-height:1.62; color:var(--slate)}
+.jd .jd-body h4{color:var(--ink); font-size:13px; font-weight:700; margin:16px 0 6px; letter-spacing:.02em}
+.jd .jd-body h4:first-child{margin-top:0}
+.jd .jd-body p{margin:0 0 10px}
+.jd .jd-body ul{margin:0 0 10px; padding-left:18px} .jd .jd-body li{margin:3px 0}
+.jd .jd-src{padding:10px 22px; border-top:1px solid var(--rule); color:var(--muted); font-size:12px}
+
+/* needs */
+.needs{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); padding:6px 4px}
+.need{display:flex; gap:12px; align-items:flex-start; padding:10px 18px}
+.need .box{flex:0 0 auto; width:15px; height:15px; border:1.5px solid var(--muted); border-radius:3px; margin-top:2px}
 .need .n-main b{font-weight:600} .need .n-main span{display:block; color:var(--muted); font-size:12.5px; margin-top:1px}
 
-/* actions */
 .actions{display:flex; gap:12px; align-items:center; margin-top:26px; flex-wrap:wrap}
 .btn{background:var(--pink); color:#fff; border:0; border-radius:var(--r); padding:12px 22px; font:inherit; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 6px 20px rgba(212,96,122,.28)}
 .btn.ghost{background:transparent; color:var(--ink); box-shadow:none; border:1.5px solid var(--ink); font-weight:600}
 .actions .later{color:var(--muted); font-size:12.5px}
-
 footer.note{margin-top:30px; color:var(--muted); font-size:12px; text-align:center; line-height:1.7}
 </style>
 </head>
@@ -95,12 +99,8 @@ footer.note{margin-top:30px; color:var(--muted); font-size:12px; text-align:cent
 <nav class="top">
   <div class="inner">
     <span class="wordmark">throughline</span>
-    <a href="#">Dashboard</a>
-    <a href="#">Add a job</a>
-    <a href="#">Jobs</a>
-    <a href="#" class="active">Job</a>
-    <a href="#">Profile</a>
-    <a href="#">Criteria</a>
+    <a href="#">Dashboard</a><a href="#">Add a job</a><a href="#">Jobs</a>
+    <a href="#" class="active">Job</a><a href="#">Profile</a><a href="#">Criteria</a>
   </div>
 </nav>
 
@@ -110,50 +110,87 @@ footer.note{margin-top:30px; color:var(--muted); font-size:12px; text-align:cent
   <div class="jobhead">
     <span class="caps pink">Job</span>
     <h1>ICT Project Manager (In-Vehicle Management System)</h1>
-    <div class="who"><b>Road Tek</b> (Transport and Main Roads) &middot; ref 1651209 &middot; captured from SEEK</div>
+    <div class="who"><b>Road Tek</b> (Transport and Main Roads) &middot; captured from SEEK</div>
+    <div class="meta">
+      <span><b>Rate</b> circa $100 PAYG / $112 ABN</span>
+      <span><b>Length</b> 12 months + ext</span>
+      <span><b>Location</b> Brisbane SEQ</span>
+      <span><b>Closes</b> 22 Jul 2026</span>
+      <span><b>Ref</b> 1651209</span>
+    </div>
   </div>
 
   <!-- verdict -->
   <div class="verdict">
     <div class="v-main">
-      <span class="caps green" style="display:block; margin-bottom:8px">Verdict</span>
+      <span class="caps green" style="display:block; margin-bottom:7px">Verdict</span>
       <div class="v-big">Worth applying</div>
       <div class="v-reason">Above your rate floor, the right role in your area, and it needs no security clearance. A clean match.</div>
     </div>
     <div class="lights" title="green worth it, yellow check, pink skip">
-      <span class="light on green"></span>
-      <span class="light yellow"></span>
-      <span class="light pink"></span>
+      <span class="light on green"></span><span class="light"></span><span class="light"></span>
     </div>
   </div>
 
-  <!-- why -->
-  <div class="sectitle caps muted">Why it scored this way</div>
+  <!-- compact why -->
+  <div class="sectitle"><span class="caps muted">Why</span><span class="n">5 of 5 checks pass</span></div>
   <div class="checks">
-    <div class="check"><div class="c-name">Rate</div><div class="c-detail">$100/hr PAYG and $112/hr ABN, both above your floor ($95 PAYG, $110 ABN).</div><span class="tag pass">Pass</span></div>
-    <div class="check"><div class="c-name">Role</div><div class="c-detail">ICT Project Manager matches your target roles.</div><span class="tag pass">Pass</span></div>
-    <div class="check"><div class="c-name">Location</div><div class="c-detail">Brisbane, SEQ. Within your area. Likely some office days, within your limit.</div><span class="tag pass">Pass</span></div>
-    <div class="check"><div class="c-name">Eligibility</div><div class="c-detail">No security clearance required, so nothing blocks you.</div><span class="tag pass">Pass</span></div>
-    <div class="check"><div class="c-name">Seen before</div><div class="c-detail">First time you have seen this reference. Not a duplicate.</div><span class="tag pass">Pass</span></div>
+    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Rate</span><span class="c-detail">$100 / $112, above your floor ($95 / $110)</span></div>
+    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Role</span><span class="c-detail">ICT Project Manager matches your target roles</span></div>
+    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Location</span><span class="c-detail">Brisbane SEQ, within your area</span></div>
+    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Eligibility</span><span class="c-detail">No security clearance required</span></div>
+    <div class="check"><span class="tick">&#10003;</span><span class="c-name">Seen before</span><span class="c-detail">First time you have seen this reference</span></div>
   </div>
 
-  <!-- the job details it read -->
-  <div class="sectitle caps muted">What the app read from the ad</div>
-  <div class="kv">
-    <div class="row"><div class="k">Rate</div><div class="v">circa $100/hr plus super (PAYG), or $112/hr plus GST (ABN)</div></div>
-    <div class="row"><div class="k">Length</div><div class="v">12 months, with possible extension</div></div>
-    <div class="row"><div class="k">Location</div><div class="v">Road Tek Brisbane, 313 Adelaide Street, Brisbane (SEQ based)</div></div>
-    <div class="row"><div class="k">Closes</div><div class="v">22 July 2026</div></div>
-    <div class="row"><div class="k">Reference</div><div class="v">1651209</div></div>
-    <div class="row"><div class="k">Work basis</div><div class="v">Contract, PAYG or ABN</div></div>
+  <!-- keywords -->
+  <div class="sectitle"><span class="caps muted">Keywords in this job</span><span class="n">pulled from the ad</span></div>
+  <div class="kw">
+    <span class="chip match">project management</span>
+    <span class="chip match">ICT delivery</span>
+    <span class="chip match">government / public sector</span>
+    <span class="chip match">stakeholder management</span>
+    <span class="chip match">vendor management</span>
+    <span class="chip match">systems integration</span>
+    <span class="chip match">project governance</span>
+    <span class="chip gap">in-vehicle systems</span>
+    <span class="chip gap">telematics</span>
+    <span class="chip gap">fleet / transport</span>
+    <span class="chip gap">device rollout</span>
+  </div>
+  <div class="legend">
+    <span><span class="sw" style="background:var(--teal-l);border:1px solid #9fcccc"></span><b>Matched</b> to your profile (7)</span>
+    <span><span class="sw" style="border:1px dashed var(--muted)"></span><b>Worth addressing</b> if you apply (4)</span>
   </div>
 
-  <!-- what you'll need (from the ad) -->
-  <div class="sectitle caps muted">What you'll need if you apply</div>
+  <!-- the actual job description -->
+  <div class="sectitle"><span class="caps muted">The job description</span><span class="n">what the app read</span></div>
+  <div class="jd">
+    <div class="jd-body">
+      <p>Road Tek, part of the Department of Transport and Main Roads, is seeking an experienced ICT Project Manager to lead the delivery of an In-Vehicle Management System across its fleet and depots.</p>
+      <h4>Key responsibilities</h4>
+      <ul>
+        <li>Lead the end to end delivery of the in-vehicle management system, from planning through to rollout across vehicles and depots.</li>
+        <li>Manage vendors, integration partners and internal stakeholders to deliver telematics and field device capability.</li>
+        <li>Maintain project governance, risk management, budget and reporting in line with Queensland Government standards.</li>
+        <li>Coordinate testing, training and change activities to support field operations and depot staff.</li>
+      </ul>
+      <h4>Essential</h4>
+      <ul>
+        <li>Demonstrated experience delivering ICT projects in a government or large enterprise environment.</li>
+        <li>Strong stakeholder and vendor management.</li>
+        <li>Experience with systems integration and hardware or device rollouts is highly regarded.</li>
+      </ul>
+      <p>The successful applicant will be Brisbane based, with some travel to depots as required.</p>
+    </div>
+    <div class="jd-src">Representative text for the mockup. In the real app this is the exact ad, pasted or read from the link.</div>
+  </div>
+
+  <!-- what you'll need -->
+  <div class="sectitle"><span class="caps muted">What you'll need if you apply</span></div>
   <div class="needs">
     <div class="need"><span class="box"></span><div class="n-main"><b>Updated resume</b><span>Word document</span></div></div>
     <div class="need"><span class="box"></span><div class="n-main"><b>Suitability statement</b><span>1 to 2 pages, addressing the job. Only once shortlisted</span></div></div>
-    <div class="need"><span class="box"></span><div class="n-main"><b>Consent form and Authority to Represent</b><span>Queensland Government forms, sent via Dochub once shortlisted</span></div></div>
+    <div class="need"><span class="box"></span><div class="n-main"><b>Consent form and Authority to Represent</b><span>Queensland Government forms, via Dochub once shortlisted</span></div></div>
   </div>
 
   <div class="actions">
@@ -163,8 +200,8 @@ footer.note{margin-top:30px; color:var(--muted); font-size:12px; text-align:cent
   </div>
 
   <footer class="note">
-    Mockup for review, one page in your design language. Road Tek job and your criteria are real.<br>
-    "throughline" is a placeholder name. The nav links are not wired up yet.
+    Mockup for review. Road Tek job and your criteria are real; the job description text is representative sample.<br>
+    "throughline" is a placeholder name. Nav links are not wired up yet.
   </footer>
 </div>
 </body>
