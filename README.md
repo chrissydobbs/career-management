@@ -11,11 +11,17 @@ We are deliberately still in the **problem and product definition** stage. No te
 design has been chosen yet. Everything is thinking made concrete, so we can pressure-test it
 before building.
 
-## Start here
+## The brief (read in this order)
 
-- **[_docs/01-problem-and-product-definition.md](_docs/01-problem-and-product-definition.md)**
-  is the shared brain. It covers the real problem, who it's for, how the app works, the
-  decisions we've made so far, and the big bets we're carrying. Written in plain English.
+1. **[_docs/01-problem-and-product-definition.md](_docs/01-problem-and-product-definition.md)**
+   is the shared brain: the real problem, who it's for, how the app works, all the decisions
+   (D1 to D19), the big bets (R1 to R3), and the principles. Written in plain English.
+2. **[_docs/market-and-differentiation.md](_docs/market-and-differentiation.md)**: the
+   landscape, the gap, and the one reason someone switches (it remembers you).
+3. **[_docs/scope.md](_docs/scope.md)**: the initial requirements. What's in the first version,
+   what's v1, what's v2, and what we never build.
+4. **[_docs/prior-work-to-reuse.md](_docs/prior-work-to-reuse.md)**: what to reuse from two
+   earlier resume projects (resume-builder and JobReady).
 
 ## Where we are
 
