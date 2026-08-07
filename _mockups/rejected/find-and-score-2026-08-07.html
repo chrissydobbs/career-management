@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First version mockup — find and score</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --panel:#ffffff; --ink:#1a2230; --muted:#5b6675; --line:#e4e8ee;
+    --accent:#0f766e; --accent-soft:#e6f2f0;
+    --green:#137a44; --green-soft:#e5f4ec;
+    --amber:#a5680a; --amber-soft:#fbf1df;
+    --red:#b42222; --red-soft:#fbe9e9;
+    --shadow:0 1px 2px rgba(20,30,45,.06),0 6px 20px rgba(20,30,45,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:24px 20px 64px}
+  header.top{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:8px; flex-wrap:wrap}
+  .brand{display:flex; align-items:baseline; gap:10px}
+  .brand b{font-size:20px; letter-spacing:-.3px}
+  .brand .tag{color:var(--muted); font-size:13px}
+  .remember{
+    display:flex; align-items:center; gap:8px; background:var(--accent-soft); color:var(--accent);
+    border:1px solid #cfe5e2; padding:8px 12px; border-radius:999px; font-size:13px; font-weight:600;
+  }
+  .remember .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  h1.page{font-size:15px; color:var(--muted); font-weight:600; margin:20px 2px 10px; text-transform:none}
+
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
+  .pad{padding:18px 18px}
+
+  /* criteria */
+  details.criteria{margin-bottom:16px}
+  details.criteria>summary{
+    list-style:none; cursor:pointer; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
+    font-weight:600; font-size:14px;
+  }
+  details.criteria>summary::-webkit-details-marker{display:none}
+  details.criteria .chev{color:var(--muted); font-size:13px; font-weight:500}
+  .crit-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; padding:4px 18px 18px}
+  @media(max-width:640px){.crit-grid{grid-template-columns:1fr}}
+  .crit-grid div span{display:block; color:var(--muted); font-size:12px; margin-bottom:2px}
+  .crit-grid div b{font-weight:600; font-size:14px}
+
+  /* add a job */
+  .add label{font-weight:600; font-size:14px; display:block; margin-bottom:8px}
+  .add textarea{
+    width:100%; min-height:56px; resize:vertical; border:1px solid var(--line); border-radius:10px;
+    padding:12px 14px; font:inherit; color:var(--ink); background:#fbfcfd;
+  }
+  .add textarea:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent)}
+  .add .row{display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap}
+  .btn{
+    background:var(--accent); color:#fff; border:0; border-radius:10px; padding:11px 18px;
+    font:inherit; font-weight:600; cursor:pointer;
+  }
+  .btn:hover{filter:brightness(1.05)}
+  .hint{color:var(--muted); font-size:13px}
+
+  /* focus result */
+  .focus{margin-top:16px; overflow:hidden}
+  .verdict{display:flex; gap:14px; align-items:flex-start; padding:18px 18px 6px}
+  .lamp{width:44px;height:44px;border-radius:12px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
+  .lamp.green{background:var(--green-soft); color:var(--green)}
+  .lamp.amber{background:var(--amber-soft); color:var(--amber)}
+  .lamp.red{background:var(--red-soft); color:var(--red)}
+  .verdict .v-main{flex:1}
+  .v-label{font-weight:700; font-size:17px}
+  .v-label.green{color:var(--green)} .v-label.amber{color:var(--amber)} .v-label.red{color:var(--red)}
+  .v-reason{color:var(--ink); margin-top:2px}
+  .jobtitle{font-weight:700; font-size:18px; margin:6px 0 2px}
+  .jobsub{color:var(--muted); font-size:14px}
+  .facts{display:flex; flex-wrap:wrap; gap:8px; padding:12px 18px 18px}
+  .fact{background:#f6f8fa; border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:13px}
+  .fact b{font-weight:600}
+  .readnote{padding:0 18px 16px; color:var(--muted); font-size:13px; display:flex; align-items:center; gap:7px}
+
+  /* list */
+  .list{margin-top:8px}
+  .job{display:flex; gap:14px; align-items:center; padding:14px 18px; border-top:1px solid var(--line); cursor:pointer}
+  .job:first-child{border-top:0}
+  .job:hover{background:#fafbfc}
+  .pill{flex:0 0 auto; display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; padding:5px 10px; border-radius:999px}
+  .pill.green{background:var(--green-soft); color:var(--green)}
+  .pill.amber{background:var(--amber-soft); color:var(--amber)}
+  .pill.red{background:var(--red-soft); color:var(--red)}
+  .job .j-main{flex:1; min-width:0}
+  .job .j-title{font-weight:600; font-size:15px}
+  .job .j-reason{color:var(--muted); font-size:13.5px; margin-top:1px}
+  .job .j-rate{color:var(--muted); font-size:13px; white-space:nowrap}
+  @media(max-width:640px){.job .j-rate{display:none}}
+
+  .remember-strip{
+    margin-top:16px; background:linear-gradient(180deg,#fbfdfc,#f3f8f7); border:1px solid #dcebe8;
+    border-radius:var(--radius); padding:16px 18px; display:flex; gap:14px; align-items:center;
+  }
+  .remember-strip .rs-ico{font-size:20px}
+  .remember-strip b{color:var(--accent)}
+  .remember-strip .rs-text{font-size:14px; color:var(--ink)}
+  .remember-strip .rs-text small{display:block; color:var(--muted); margin-top:2px}
+
+  footer.note{margin-top:26px; color:var(--muted); font-size:12.5px; text-align:center; line-height:1.6}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <b>throughline</b>
+      <span class="tag">working name &middot; your career, remembered</span>
+    </div>
+    <div class="remember" title="What the app already remembers about you">
+      <span class="dot" aria-hidden="true"></span>
+      Remembering you: 10 roles, 42 achievements
+    </div>
+  </header>
+
+  <!-- Your criteria (setup, pre-filled) -->
+  <details class="criteria card">
+    <summary>Your criteria <span class="chev">set once, change anytime &#9662;</span></summary>
+    <div class="crit-grid">
+      <div><span>Roles you want</span><b>Senior / Principal Project Manager, Program Manager, Delivery Lead</b></div>
+      <div><span>Work type</span><b>Contract (PAYG or ABN)</b></div>
+      <div><span>Minimum rate</span><b>$95/hr PAYG &middot; $110/hr ABN</b></div>
+      <div><span>Location</span><b>Brisbane / SEQ &middot; up to 2 office days</b></div>
+      <div><span>Eligibility</span><b>No clearance held &middot; willing to obtain</b></div>
+      <div><span>Absolute no's</span><b>Fully onsite &middot; interstate relocation</b></div>
+    </div>
+  </details>
+
+  <!-- Add a job -->
+  <section class="card pad add">
+    <label for="paste">Add a job</label>
+    <textarea id="paste" placeholder="Paste a SEEK or LinkedIn link, or forward an agent's email. The app reads the details for you."></textarea>
+    <div class="row">
+      <button class="btn" id="addBtn">Add job</button>
+      <span class="hint">Paste and go. You only fix it if the app got something wrong.</span>
+    </div>
+  </section>
+
+  <h1 class="page">Latest</h1>
+
+  <!-- Focus result (RoadTek, real job) -->
+  <section class="card focus" id="focus" aria-live="polite">
+    <div class="verdict">
+      <div class="lamp green" aria-hidden="true">&#10003;</div>
+      <div class="v-main">
+        <div class="v-label green">Worth applying</div>
+        <div class="v-reason" id="focusReason">Good match. Pay is above your floor, it is the right role in Brisbane, and it needs no clearance.</div>
+        <div class="jobtitle" id="focusTitle">ICT Project Manager (In-Vehicle Management System)</div>
+        <div class="jobsub" id="focusSub">Road Tek (Transport and Main Roads) &middot; ref 1651209</div>
+      </div>
+    </div>
+    <div class="facts" id="focusFacts">
+      <span class="fact"><b>Rate</b> circa $100/hr PAYG &middot; $112/hr ABN</span>
+      <span class="fact"><b>Length</b> 12 months, possible extension</span>
+      <span class="fact"><b>Location</b> Brisbane, SEQ</span>
+      <span class="fact"><b>Closes</b> 22 July 2026</span>
+    </div>
+    <div class="readnote">&#9998; The app read all of this from the ad. Nothing typed by hand.</div>
+  </section>
+
+  <!-- Today's list -->
+  <h1 class="page">Also captured</h1>
+  <section class="card list" id="list">
+    <div class="job" data-title="Senior Project Manager, Data &amp; AI" data-sub="Brennan &middot; Brisbane" data-verdict="green" data-label="Worth applying" data-reason="Strong match on your recent AI and delivery work, pay above your floor, Brisbane based." data-facts="Rate|$115/hr ABN;Length|9 months;Location|Brisbane;Closes|1 Aug 2026">
+      <span class="pill green"><span aria-hidden="true">&#10003;</span> Worth it</span>
+      <div class="j-main">
+        <div class="j-title">Senior Project Manager, Data &amp; AI</div>
+        <div class="j-reason">Strong match on your AI and delivery work.</div>
+      </div>
+      <div class="j-rate">$115/hr ABN</div>
+    </div>
+
+    <div class="job" data-title="Project Manager, M365 Rollout" data-sub="Undisclosed &middot; Brisbane" data-verdict="red" data-label="Probably not" data-reason="Pay is below your floor: $85/hr ABN against your $110 minimum." data-facts="Rate|$85/hr ABN;Length|6 months;Location|Brisbane;Closes|18 Jul 2026">
+      <span class="pill red"><span aria-hidden="true">&#10007;</span> Not worth it</span>
+      <div class="j-main">
+        <div class="j-title">Project Manager, M365 Rollout</div>
+        <div class="j-reason">Pay below your floor ($85/hr ABN vs your $110).</div>
+      </div>
+      <div class="j-rate">$85/hr ABN</div>
+    </div>
+
+    <div class="job" data-title="ICT Project Manager" data-sub="via Peoplebank &middot; Brisbane" data-verdict="red" data-label="Probably not" data-reason="You have seen this one before. You applied via Hays two weeks ago, so applying again risks a double submission." data-facts="Rate|$105/hr ABN;Length|12 months;Location|Brisbane;Note|Same role, different agency">
+      <span class="pill red"><span aria-hidden="true">&#10007;</span> Already seen</span>
+      <div class="j-main">
+        <div class="j-title">ICT Project Manager <span style="color:var(--muted);font-weight:400">(again)</span></div>
+        <div class="j-reason">Seen before, via Hays two weeks ago.</div>
+      </div>
+      <div class="j-rate">$105/hr ABN</div>
+    </div>
+
+    <div class="job" data-title="Senior Project Manager (Defence)" data-sub="via DFP &middot; Brisbane" data-verdict="amber" data-label="Worth a look, but check" data-reason="Needs a security clearance, and the ad does not say clearly whether you must already hold one or just be able to get one. Worth a quick check before you spend time on it." data-facts="Rate|$120/hr ABN;Length|12 months;Location|Brisbane;Clearance|Wording unclear">
+      <span class="pill amber"><span aria-hidden="true">&#9888;</span> Please check</span>
+      <div class="j-main">
+        <div class="j-title">Senior Project Manager (Defence)</div>
+        <div class="j-reason">Clearance needed, ad is unclear whether you must already hold it.</div>
+      </div>
+      <div class="j-rate">$120/hr ABN</div>
+    </div>
+  </section>
+
+  <!-- Starting to remember -->
+  <div class="remember-strip">
+    <span class="rs-ico" aria-hidden="true">&#129504;</span>
+    <div class="rs-text">
+      <b>Starting to remember you.</b> 14 jobs seen, 3 duplicates caught so far.
+      <small>The more you use it, the sharper "worth applying?" gets, and the faster your applications become.</small>
+    </div>
+  </div>
+
+  <footer class="note">
+    Mockup for review. Real job (Road Tek) and your real criteria; the other jobs are sample data.<br>
+    "throughline" is a placeholder name. Nothing here is built yet.
+  </footer>
+
+</div>
+
+<script>
+  // Selecting a job in the list shows it in the focus card.
+  var focus = document.getElementById('focus');
+  function paintFocus(d){
+    focus.querySelector('.lamp').className = 'lamp ' + d.verdict;
+    focus.querySelector('.lamp').innerHTML = d.verdict==='green' ? '&#10003;' : d.verdict==='amber' ? '&#9888;' : '&#10007;';
+    var vl = focus.querySelector('.v-label');
+    vl.className = 'v-label ' + d.verdict; vl.textContent = d.label;
+    document.getElementById('focusReason').textContent = d.reason;
+    document.getElementById('focusTitle').textContent = d.title;
+    document.getElementById('focusSub').textContent = d.sub;
+    var facts = document.getElementById('focusFacts'); facts.innerHTML='';
+    d.facts.split(';').forEach(function(f){
+      var p=f.split('|'); var s=document.createElement('span'); s.className='fact';
+      s.innerHTML='<b>'+p[0]+'</b> '+p[1]; facts.appendChild(s);
+    });
+    focus.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.job'), function(job){
+    job.addEventListener('click', function(){ paintFocus(job.dataset); });
+  });
+
+  // Paste and add: pretend to read the job, then show the RoadTek result.
+  var roadtek = {
+    verdict:'green', label:'Worth applying',
+    reason:'Good match. Pay is above your floor, it is the right role in Brisbane, and it needs no clearance.',
+    title:'ICT Project Manager (In-Vehicle Management System)',
+    sub:'Road Tek (Transport and Main Roads) · ref 1651209',
+    facts:'Rate|circa $100/hr PAYG · $112/hr ABN;Length|12 months, possible extension;Location|Brisbane, SEQ;Closes|22 July 2026'
+  };
+  document.getElementById('addBtn').addEventListener('click', function(){
+    var box=document.getElementById('paste');
+    if(!box.value.trim()){ box.focus(); return; }
+    var btn=this; var old=btn.textContent; btn.textContent='Reading the job...'; btn.disabled=true;
+    setTimeout(function(){ paintFocus(roadtek); btn.textContent=old; btn.disabled=false; box.value=''; }, 700);
+  });
+</script>
+</body>
+</html>

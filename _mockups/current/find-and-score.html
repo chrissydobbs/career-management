@@ -4,262 +4,241 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>First version mockup — find and score</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
 <style>
-  :root{
-    --bg:#f4f6f8; --panel:#ffffff; --ink:#1a2230; --muted:#5b6675; --line:#e4e8ee;
-    --accent:#0f766e; --accent-soft:#e6f2f0;
-    --green:#137a44; --green-soft:#e5f4ec;
-    --amber:#a5680a; --amber-soft:#fbf1df;
-    --red:#b42222; --red-soft:#fbe9e9;
-    --shadow:0 1px 2px rgba(20,30,45,.06),0 6px 20px rgba(20,30,45,.06);
-    --radius:14px;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:960px; margin:0 auto; padding:24px 20px 64px}
-  header.top{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:8px; flex-wrap:wrap}
-  .brand{display:flex; align-items:baseline; gap:10px}
-  .brand b{font-size:20px; letter-spacing:-.3px}
-  .brand .tag{color:var(--muted); font-size:13px}
-  .remember{
-    display:flex; align-items:center; gap:8px; background:var(--accent-soft); color:var(--accent);
-    border:1px solid #cfe5e2; padding:8px 12px; border-radius:999px; font-size:13px; font-weight:600;
-  }
-  .remember .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
-  h1.page{font-size:15px; color:var(--muted); font-weight:600; margin:20px 2px 10px; text-transform:none}
+@import url("https://fonts.bunny.net/css?family=inter:400,500,600,700");
+:root{
+  --bg:#FAFAFA; --paper:#FFFFFF; --paper2:#FDFDFD;
+  --ink:#1A2A2A; --slate:#3D4852; --muted:#8A9398; --rule:#E5E5E5;
+  --green:#3EA03E; --green-l:#B8DDB8;
+  --yellow:#E0C040; --yellow-l:#F5E6A3;
+  --pink:#D4607A; --pink-l:#F1C2C3;
+  --teal:#4A9898; --teal-l:#B3DADA;
+  --r:4px; --r-tile:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1240px; margin:0 auto; padding:32px 28px 72px}
+.caps{font-weight:700; font-size:11px; letter-spacing:.2em; text-transform:uppercase}
+.caps.pink{color:var(--pink)} .caps.teal{color:var(--teal)} .caps.muted{color:var(--muted)}
 
-  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
-  .pad{padding:18px 18px}
+/* masthead */
+.mast{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  border-bottom:2px solid var(--ink); padding-bottom:18px; margin-bottom:28px}
+.mast .wordmark{font-weight:700; font-size:26px; letter-spacing:-.03em}
+.mast .sub{color:var(--muted); font-size:12px; margin-top:2px}
+.mast .remember{text-align:right}
+.mast .remember .val{font-weight:700; font-size:15px; color:var(--ink)}
+.mast .remember .val b{color:var(--teal)}
 
-  /* criteria */
-  details.criteria{margin-bottom:16px}
-  details.criteria>summary{
-    list-style:none; cursor:pointer; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
-    font-weight:600; font-size:14px;
-  }
-  details.criteria>summary::-webkit-details-marker{display:none}
-  details.criteria .chev{color:var(--muted); font-size:13px; font-weight:500}
-  .crit-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; padding:4px 18px 18px}
-  @media(max-width:640px){.crit-grid{grid-template-columns:1fr}}
-  .crit-grid div span{display:block; color:var(--muted); font-size:12px; margin-bottom:2px}
-  .crit-grid div b{font-weight:600; font-size:14px}
+/* KPI tiles */
+.kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px}
+@media(max-width:780px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); padding:18px 18px 16px}
+.kpi .k-label{margin-bottom:12px}
+.kpi .k-val{font-weight:700; font-size:34px; line-height:1; letter-spacing:-.02em}
+.kpi .k-val.green{color:var(--green)} .kpi .k-val.yellow{color:#B8930f} .kpi .k-val.pink{color:var(--pink)}
+.kpi .k-foot{color:var(--muted); font-size:12px; margin-top:8px}
+.kpi.remember .k-val{color:var(--teal); font-size:28px}
+.bars{display:flex; gap:4px; margin-top:12px; height:8px}
+.bars i{display:block; border-radius:2px; height:8px}
 
-  /* add a job */
-  .add label{font-weight:600; font-size:14px; display:block; margin-bottom:8px}
-  .add textarea{
-    width:100%; min-height:56px; resize:vertical; border:1px solid var(--line); border-radius:10px;
-    padding:12px 14px; font:inherit; color:var(--ink); background:#fbfcfd;
-  }
-  .add textarea:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent)}
-  .add .row{display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap}
-  .btn{
-    background:var(--accent); color:#fff; border:0; border-radius:10px; padding:11px 18px;
-    font:inherit; font-weight:600; cursor:pointer;
-  }
-  .btn:hover{filter:brightness(1.05)}
-  .hint{color:var(--muted); font-size:13px}
+/* capture row */
+.capture{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile);
+  padding:16px 18px; margin-bottom:28px; display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+.capture label{flex:0 0 auto}
+.capture input{flex:1; min-width:220px; border:1.5px solid var(--rule); border-radius:var(--r);
+  padding:11px 13px; font:inherit; color:var(--ink); background:var(--paper2)}
+.capture input:focus{outline:none; border-color:var(--pink)}
+.btn{background:var(--pink); color:#fff; border:0; border-radius:var(--r); padding:11px 20px;
+  font:inherit; font-weight:700; font-size:14px; cursor:pointer; box-shadow:0 6px 20px rgba(212,96,122,.28)}
+.btn:hover{filter:brightness(1.04)}
+.btn.ghost{background:transparent; color:var(--ink); box-shadow:none; border:1.5px solid var(--ink); font-weight:600}
+.hint{color:var(--muted); font-size:12.5px}
 
-  /* focus result */
-  .focus{margin-top:16px; overflow:hidden}
-  .verdict{display:flex; gap:14px; align-items:flex-start; padding:18px 18px 6px}
-  .lamp{width:44px;height:44px;border-radius:12px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700}
-  .lamp.green{background:var(--green-soft); color:var(--green)}
-  .lamp.amber{background:var(--amber-soft); color:var(--amber)}
-  .lamp.red{background:var(--red-soft); color:var(--red)}
-  .verdict .v-main{flex:1}
-  .v-label{font-weight:700; font-size:17px}
-  .v-label.green{color:var(--green)} .v-label.amber{color:var(--amber)} .v-label.red{color:var(--red)}
-  .v-reason{color:var(--ink); margin-top:2px}
-  .jobtitle{font-weight:700; font-size:18px; margin:6px 0 2px}
-  .jobsub{color:var(--muted); font-size:14px}
-  .facts{display:flex; flex-wrap:wrap; gap:8px; padding:12px 18px 18px}
-  .fact{background:#f6f8fa; border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:13px}
-  .fact b{font-weight:600}
-  .readnote{padding:0 18px 16px; color:var(--muted); font-size:13px; display:flex; align-items:center; gap:7px}
+/* section head */
+.sec{display:flex; align-items:baseline; justify-content:space-between; margin:0 2px 12px}
+.sec .crit{color:var(--slate); font-size:13px}
+.sec .crit b{color:var(--ink); font-weight:600}
 
-  /* list */
-  .list{margin-top:8px}
-  .job{display:flex; gap:14px; align-items:center; padding:14px 18px; border-top:1px solid var(--line); cursor:pointer}
-  .job:first-child{border-top:0}
-  .job:hover{background:#fafbfc}
-  .pill{flex:0 0 auto; display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; padding:5px 10px; border-radius:999px}
-  .pill.green{background:var(--green-soft); color:var(--green)}
-  .pill.amber{background:var(--amber-soft); color:var(--amber)}
-  .pill.red{background:var(--red-soft); color:var(--red)}
-  .job .j-main{flex:1; min-width:0}
-  .job .j-title{font-weight:600; font-size:15px}
-  .job .j-reason{color:var(--muted); font-size:13.5px; margin-top:1px}
-  .job .j-rate{color:var(--muted); font-size:13px; white-space:nowrap}
-  @media(max-width:640px){.job .j-rate{display:none}}
+/* table */
+.tablewrap{background:var(--paper); border:1px solid var(--rule); border-radius:var(--r-tile); overflow:hidden}
+table{width:100%; border-collapse:collapse}
+thead th{
+  text-align:left; padding:14px 16px; border-bottom:2px solid var(--ink);
+  font-weight:700; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+  cursor:pointer; user-select:none; white-space:nowrap;
+}
+thead th.no-sort{cursor:default}
+thead th .arrow{color:var(--pink); margin-left:5px; font-size:9px; opacity:0}
+thead th.sorted .arrow{opacity:1}
+tbody td{padding:15px 16px; border-bottom:1px solid var(--rule); font-size:14px; vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--paper2)}
+tbody tr.flash{animation:flash 1.4s ease}
+@keyframes flash{0%{background:var(--teal-l)}100%{background:transparent}}
+.role{font-weight:600; color:var(--ink)}
+.role .ref{display:block; color:var(--muted); font-weight:400; font-size:12px; margin-top:2px}
+.client{color:var(--slate)}
+.rate{white-space:nowrap; font-variant-numeric:tabular-nums}
+.loc,.closes{color:var(--slate); white-space:nowrap}
+.why{color:var(--slate); font-size:13px; max-width:280px}
+.pill{display:inline-block; padding:5px 10px; border-radius:3px; font-weight:700; font-size:10.5px;
+  letter-spacing:.06em; text-transform:uppercase; white-space:nowrap}
+.pill.green{background:var(--green); color:#fff}
+.pill.yellow{background:var(--yellow); color:#3a2f05}
+.pill.pink{background:var(--pink); color:#fff}
 
-  .remember-strip{
-    margin-top:16px; background:linear-gradient(180deg,#fbfdfc,#f3f8f7); border:1px solid #dcebe8;
-    border-radius:var(--radius); padding:16px 18px; display:flex; gap:14px; align-items:center;
-  }
-  .remember-strip .rs-ico{font-size:20px}
-  .remember-strip b{color:var(--accent)}
-  .remember-strip .rs-text{font-size:14px; color:var(--ink)}
-  .remember-strip .rs-text small{display:block; color:var(--muted); margin-top:2px}
+.exportlink{background:none; border:0; color:var(--teal); font:inherit; font-weight:600; font-size:12.5px; cursor:pointer}
+.exportlink:hover{text-decoration:underline}
 
-  footer.note{margin-top:26px; color:var(--muted); font-size:12.5px; text-align:center; line-height:1.6}
-  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+footer.note{margin-top:26px; color:var(--muted); font-size:12px; text-align:center; line-height:1.7}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header class="top">
-    <div class="brand">
-      <b>throughline</b>
-      <span class="tag">working name &middot; your career, remembered</span>
+  <div class="mast">
+    <div>
+      <div class="wordmark">throughline</div>
+      <div class="sub">working name &middot; your career, remembered</div>
     </div>
-    <div class="remember" title="What the app already remembers about you">
-      <span class="dot" aria-hidden="true"></span>
-      Remembering you: 10 roles, 42 achievements
-    </div>
-  </header>
-
-  <!-- Your criteria (setup, pre-filled) -->
-  <details class="criteria card">
-    <summary>Your criteria <span class="chev">set once, change anytime &#9662;</span></summary>
-    <div class="crit-grid">
-      <div><span>Roles you want</span><b>Senior / Principal Project Manager, Program Manager, Delivery Lead</b></div>
-      <div><span>Work type</span><b>Contract (PAYG or ABN)</b></div>
-      <div><span>Minimum rate</span><b>$95/hr PAYG &middot; $110/hr ABN</b></div>
-      <div><span>Location</span><b>Brisbane / SEQ &middot; up to 2 office days</b></div>
-      <div><span>Eligibility</span><b>No clearance held &middot; willing to obtain</b></div>
-      <div><span>Absolute no's</span><b>Fully onsite &middot; interstate relocation</b></div>
-    </div>
-  </details>
-
-  <!-- Add a job -->
-  <section class="card pad add">
-    <label for="paste">Add a job</label>
-    <textarea id="paste" placeholder="Paste a SEEK or LinkedIn link, or forward an agent's email. The app reads the details for you."></textarea>
-    <div class="row">
-      <button class="btn" id="addBtn">Add job</button>
-      <span class="hint">Paste and go. You only fix it if the app got something wrong.</span>
-    </div>
-  </section>
-
-  <h1 class="page">Latest</h1>
-
-  <!-- Focus result (RoadTek, real job) -->
-  <section class="card focus" id="focus" aria-live="polite">
-    <div class="verdict">
-      <div class="lamp green" aria-hidden="true">&#10003;</div>
-      <div class="v-main">
-        <div class="v-label green">Worth applying</div>
-        <div class="v-reason" id="focusReason">Good match. Pay is above your floor, it is the right role in Brisbane, and it needs no clearance.</div>
-        <div class="jobtitle" id="focusTitle">ICT Project Manager (In-Vehicle Management System)</div>
-        <div class="jobsub" id="focusSub">Road Tek (Transport and Main Roads) &middot; ref 1651209</div>
-      </div>
-    </div>
-    <div class="facts" id="focusFacts">
-      <span class="fact"><b>Rate</b> circa $100/hr PAYG &middot; $112/hr ABN</span>
-      <span class="fact"><b>Length</b> 12 months, possible extension</span>
-      <span class="fact"><b>Location</b> Brisbane, SEQ</span>
-      <span class="fact"><b>Closes</b> 22 July 2026</span>
-    </div>
-    <div class="readnote">&#9998; The app read all of this from the ad. Nothing typed by hand.</div>
-  </section>
-
-  <!-- Today's list -->
-  <h1 class="page">Also captured</h1>
-  <section class="card list" id="list">
-    <div class="job" data-title="Senior Project Manager, Data &amp; AI" data-sub="Brennan &middot; Brisbane" data-verdict="green" data-label="Worth applying" data-reason="Strong match on your recent AI and delivery work, pay above your floor, Brisbane based." data-facts="Rate|$115/hr ABN;Length|9 months;Location|Brisbane;Closes|1 Aug 2026">
-      <span class="pill green"><span aria-hidden="true">&#10003;</span> Worth it</span>
-      <div class="j-main">
-        <div class="j-title">Senior Project Manager, Data &amp; AI</div>
-        <div class="j-reason">Strong match on your AI and delivery work.</div>
-      </div>
-      <div class="j-rate">$115/hr ABN</div>
-    </div>
-
-    <div class="job" data-title="Project Manager, M365 Rollout" data-sub="Undisclosed &middot; Brisbane" data-verdict="red" data-label="Probably not" data-reason="Pay is below your floor: $85/hr ABN against your $110 minimum." data-facts="Rate|$85/hr ABN;Length|6 months;Location|Brisbane;Closes|18 Jul 2026">
-      <span class="pill red"><span aria-hidden="true">&#10007;</span> Not worth it</span>
-      <div class="j-main">
-        <div class="j-title">Project Manager, M365 Rollout</div>
-        <div class="j-reason">Pay below your floor ($85/hr ABN vs your $110).</div>
-      </div>
-      <div class="j-rate">$85/hr ABN</div>
-    </div>
-
-    <div class="job" data-title="ICT Project Manager" data-sub="via Peoplebank &middot; Brisbane" data-verdict="red" data-label="Probably not" data-reason="You have seen this one before. You applied via Hays two weeks ago, so applying again risks a double submission." data-facts="Rate|$105/hr ABN;Length|12 months;Location|Brisbane;Note|Same role, different agency">
-      <span class="pill red"><span aria-hidden="true">&#10007;</span> Already seen</span>
-      <div class="j-main">
-        <div class="j-title">ICT Project Manager <span style="color:var(--muted);font-weight:400">(again)</span></div>
-        <div class="j-reason">Seen before, via Hays two weeks ago.</div>
-      </div>
-      <div class="j-rate">$105/hr ABN</div>
-    </div>
-
-    <div class="job" data-title="Senior Project Manager (Defence)" data-sub="via DFP &middot; Brisbane" data-verdict="amber" data-label="Worth a look, but check" data-reason="Needs a security clearance, and the ad does not say clearly whether you must already hold one or just be able to get one. Worth a quick check before you spend time on it." data-facts="Rate|$120/hr ABN;Length|12 months;Location|Brisbane;Clearance|Wording unclear">
-      <span class="pill amber"><span aria-hidden="true">&#9888;</span> Please check</span>
-      <div class="j-main">
-        <div class="j-title">Senior Project Manager (Defence)</div>
-        <div class="j-reason">Clearance needed, ad is unclear whether you must already hold it.</div>
-      </div>
-      <div class="j-rate">$120/hr ABN</div>
-    </div>
-  </section>
-
-  <!-- Starting to remember -->
-  <div class="remember-strip">
-    <span class="rs-ico" aria-hidden="true">&#129504;</span>
-    <div class="rs-text">
-      <b>Starting to remember you.</b> 14 jobs seen, 3 duplicates caught so far.
-      <small>The more you use it, the sharper "worth applying?" gets, and the faster your applications become.</small>
+    <div class="remember">
+      <div class="caps teal" style="margin-bottom:4px">Remembering you</div>
+      <div class="val"><b>10 roles</b> &middot; 42 achievements &middot; 14 jobs seen</div>
     </div>
   </div>
 
+  <!-- KPI tiles -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="k-label caps green">Worth applying</div>
+      <div class="k-val green">2</div>
+      <div class="bars"><i style="flex:2;background:var(--green)"></i><i style="flex:1;background:var(--yellow)"></i><i style="flex:2;background:var(--pink)"></i></div>
+      <div class="k-foot">of 5 jobs captured</div>
+    </div>
+    <div class="kpi">
+      <div class="k-label caps muted">Worth a check</div>
+      <div class="k-val yellow">1</div>
+      <div class="k-foot">clearance wording unclear</div>
+    </div>
+    <div class="kpi">
+      <div class="k-label caps muted">Skip</div>
+      <div class="k-val pink">2</div>
+      <div class="k-foot">below rate, or already seen</div>
+    </div>
+    <div class="kpi remember">
+      <div class="k-label caps teal">Time saved</div>
+      <div class="k-val">3.2 hrs</div>
+      <div class="k-foot">this week, vs starting each from scratch</div>
+    </div>
+  </div>
+
+  <!-- capture -->
+  <div class="capture">
+    <label class="caps muted" for="paste">Add a job</label>
+    <input id="paste" type="text" placeholder="Paste a SEEK or LinkedIn link, or forward an agent's email. The app reads the details for you.">
+    <button class="btn" id="addBtn">Add job</button>
+    <span class="hint">Paste and go. You only fix it if the app got something wrong.</span>
+  </div>
+
+  <div class="sec">
+    <div>
+      <span class="caps pink">Your jobs</span>
+      <span class="crit">&nbsp;&nbsp;Scored against: <b>$95 PAYG / $110 ABN</b> &middot; <b>Senior/Principal PM</b> &middot; <b>Brisbane SEQ</b> &middot; <b>no clearance, willing to obtain</b></span>
+    </div>
+    <button class="exportlink" onclick="alert('Mockup: would export this table as a report (CSV or PDF).')">Export report</button>
+  </div>
+
+  <!-- table -->
+  <div class="tablewrap">
+    <table id="jobs">
+      <thead>
+        <tr>
+          <th data-key="rank" class="sorted">Signal <span class="arrow">&#9650;</span></th>
+          <th data-key="role">Role <span class="arrow">&#9650;</span></th>
+          <th data-key="client">Client / agency <span class="arrow">&#9650;</span></th>
+          <th data-key="rateNum">Rate <span class="arrow">&#9650;</span></th>
+          <th data-key="loc">Location <span class="arrow">&#9650;</span></th>
+          <th data-key="closesNum">Closes <span class="arrow">&#9650;</span></th>
+          <th class="no-sort">Why</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
   <footer class="note">
-    Mockup for review. Real job (Road Tek) and your real criteria; the other jobs are sample data.<br>
-    "throughline" is a placeholder name. Nothing here is built yet.
+    Mockup for review, in your design language. Road Tek job and your criteria are real; the other jobs are sample data.<br>
+    Click any column heading to sort. "throughline" is a placeholder name. Nothing here is built yet.
   </footer>
 
 </div>
 
 <script>
-  // Selecting a job in the list shows it in the focus card.
-  var focus = document.getElementById('focus');
-  function paintFocus(d){
-    focus.querySelector('.lamp').className = 'lamp ' + d.verdict;
-    focus.querySelector('.lamp').innerHTML = d.verdict==='green' ? '&#10003;' : d.verdict==='amber' ? '&#9888;' : '&#10007;';
-    var vl = focus.querySelector('.v-label');
-    vl.className = 'v-label ' + d.verdict; vl.textContent = d.label;
-    document.getElementById('focusReason').textContent = d.reason;
-    document.getElementById('focusTitle').textContent = d.title;
-    document.getElementById('focusSub').textContent = d.sub;
-    var facts = document.getElementById('focusFacts'); facts.innerHTML='';
-    d.facts.split(';').forEach(function(f){
-      var p=f.split('|'); var s=document.createElement('span'); s.className='fact';
-      s.innerHTML='<b>'+p[0]+'</b> '+p[1]; facts.appendChild(s);
+  var rows = [
+    {rank:0, signal:'green', label:'Worth it', role:'ICT Project Manager (In-Vehicle Management System)', ref:'ref 1651209', client:'Road Tek (TMR)', rate:'$100 PAYG / $112 ABN', rateNum:112, loc:'Brisbane, SEQ', closes:'22 Jul 2026', closesNum:20260722, why:'Above your floor, right role, no clearance needed.'},
+    {rank:0, signal:'green', label:'Worth it', role:'Senior Project Manager, Data & AI', ref:'', client:'Brennan', rate:'$115 ABN', rateNum:115, loc:'Brisbane', closes:'1 Aug 2026', closesNum:20260801, why:'Strong match on your AI and delivery work.'},
+    {rank:1, signal:'yellow', label:'Check', role:'Senior Project Manager (Defence)', ref:'', client:'via DFP', rate:'$120 ABN', rateNum:120, loc:'Brisbane', closes:'5 Aug 2026', closesNum:20260805, why:'Clearance needed, ad unclear whether you must already hold it.'},
+    {rank:2, signal:'pink', label:'Skip', role:'Project Manager, M365 Rollout', ref:'', client:'Undisclosed', rate:'$85 ABN', rateNum:85, loc:'Brisbane', closes:'18 Jul 2026', closesNum:20260718, why:'Pay below your floor ($85 vs your $110).'},
+    {rank:2, signal:'pink', label:'Skip', role:'ICT Project Manager', ref:'same role, another agency', client:'via Peoplebank', rate:'$105 ABN', rateNum:105, loc:'Brisbane', closes:'29 Jul 2026', closesNum:20260729, why:'Seen before, you applied via Hays two weeks ago.'}
+  ];
+  var sortKey='rank', sortDir=1, flashRole=null;
+
+  function render(){
+    var body=document.getElementById('rows'); body.innerHTML='';
+    var sorted=rows.slice().sort(function(a,b){
+      var x=a[sortKey], y=b[sortKey];
+      if(typeof x==='string'){x=x.toLowerCase(); y=y.toLowerCase();}
+      if(x<y) return -1*sortDir; if(x>y) return 1*sortDir; return 0;
     });
-    focus.scrollIntoView({behavior:'smooth',block:'nearest'});
+    sorted.forEach(function(r){
+      var tr=document.createElement('tr');
+      if(r.role===flashRole) tr.className='flash';
+      tr.innerHTML=
+        '<td><span class="pill '+r.signal+'">'+r.label+'</span></td>'+
+        '<td><span class="role">'+r.role+(r.ref?'<span class="ref">'+r.ref+'</span>':'')+'</span></td>'+
+        '<td class="client">'+r.client+'</td>'+
+        '<td class="rate">'+r.rate+'</td>'+
+        '<td class="loc">'+r.loc+'</td>'+
+        '<td class="closes">'+r.closes+'</td>'+
+        '<td class="why">'+r.why+'</td>';
+      body.appendChild(tr);
+    });
+    flashRole=null;
+    Array.prototype.forEach.call(document.querySelectorAll('thead th'), function(th){
+      th.classList.toggle('sorted', th.dataset.key===sortKey);
+      var arrow=th.querySelector('.arrow'); if(arrow) arrow.innerHTML = sortDir===1 ? '&#9650;' : '&#9660;';
+    });
   }
-  Array.prototype.forEach.call(document.querySelectorAll('.job'), function(job){
-    job.addEventListener('click', function(){ paintFocus(job.dataset); });
+  Array.prototype.forEach.call(document.querySelectorAll('thead th'), function(th){
+    if(th.classList.contains('no-sort')) return;
+    th.addEventListener('click', function(){
+      var k=th.dataset.key;
+      if(k===sortKey){ sortDir*=-1; } else { sortKey=k; sortDir=1; }
+      render();
+    });
   });
 
-  // Paste and add: pretend to read the job, then show the RoadTek result.
-  var roadtek = {
-    verdict:'green', label:'Worth applying',
-    reason:'Good match. Pay is above your floor, it is the right role in Brisbane, and it needs no clearance.',
-    title:'ICT Project Manager (In-Vehicle Management System)',
-    sub:'Road Tek (Transport and Main Roads) · ref 1651209',
-    facts:'Rate|circa $100/hr PAYG · $112/hr ABN;Length|12 months, possible extension;Location|Brisbane, SEQ;Closes|22 July 2026'
-  };
+  // Add a job: read it, drop it into the table, sorted and flagged.
   document.getElementById('addBtn').addEventListener('click', function(){
-    var box=document.getElementById('paste');
-    if(!box.value.trim()){ box.focus(); return; }
-    var btn=this; var old=btn.textContent; btn.textContent='Reading the job...'; btn.disabled=true;
-    setTimeout(function(){ paintFocus(roadtek); btn.textContent=old; btn.disabled=false; box.value=''; }, 700);
+    var box=document.getElementById('paste'); if(!box.value.trim()){ box.focus(); return; }
+    var btn=this, old=btn.textContent; btn.textContent='Reading the job...'; btn.disabled=true;
+    setTimeout(function(){
+      var job={rank:0, signal:'green', label:'Worth it', role:'Delivery Manager, Core Systems Upgrade', ref:'just added', client:'via Talent', rate:'$118 ABN', rateNum:118, loc:'Brisbane', closes:'8 Aug 2026', closesNum:20260808, why:'Above your floor, right seniority, Brisbane based.'};
+      if(!rows.some(function(r){return r.role===job.role})) rows.unshift(job);
+      flashRole=job.role; sortKey='rank'; sortDir=1;
+      btn.textContent=old; btn.disabled=false; box.value=''; render();
+      document.querySelector('.tablewrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+    }, 700);
   });
+
+  render();
 </script>
 </body>
 </html>
